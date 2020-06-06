@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const db = require('./config/keys').mongoURI;
+const data = require('./routes/api/data');
 
 const app = express();
 const port = 3334;
@@ -15,12 +16,10 @@ mongoose
     .then(() => console.log("MongoDB connected!"))
     .catch(err => console.log(err));
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
+app.use('/api/data', data);
 
 app.post('/', (req, res) => {
-    console.log('Someone posted');
+    console.log('Someone posted:');
     console.log(req.body.pm25);
     console.log(req.body.pm10);  
 });
