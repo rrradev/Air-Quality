@@ -2,21 +2,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const DataSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    value: {
+
+    pm25: {
         type: Number,
         required: true
     },
-    node: {
-        type: String,
-        required: false
+    pm10: {
+        type: Number,
+        required: true
     },
     date: {
         type: Date,
-        required: true
+        default: Date.now()
     }
 });
 
