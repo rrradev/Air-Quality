@@ -18,10 +18,4 @@ mongoose
 
 app.use('/api/data', data);
 
-app.post('/', (req, res) => {
-    console.log('Someone posted:');
-    console.log(req.body.pm25);
-    console.log(req.body.pm10);  
-});
-
 app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
