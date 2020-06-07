@@ -6,9 +6,14 @@ function PmChart(){
         labels: [1,2,3,4,5],
         datasets:[
             {
-                label: "PM",
+                label: "PM 2.5",
                 backgroundColor: "rgba(255, 0, 255, 0.75)",
-                data: [100,22,220,334,100]
+                data: [25,22,50,36,5]
+            },
+            {
+                label: "PM 10",
+                backgroundColor: "rgba(0, 255, 0, 0.75)",
+                data: [100,150,220,70,90]
             }
         ]
 
