@@ -7,7 +7,7 @@ function PmChart(){
     const [isLoaded, setIsLoaded] = useState(false);
 
       useEffect(() => {
-        fetch("/api/data")
+        fetch("/api/daily-data")
         .then(res => res.json())
         .then(
             (values) => {
@@ -25,21 +25,20 @@ function PmChart(){
     } else if(!isLoaded){
         return <div>Loading...</div>;
     } else{
-
-    }
-         return( 
+        return( 
             <div className="App" style = {
                 {position: "relative",
-                height:1000, 
-                width:1000}}>
+                 height:1000, 
+                 width:1000}}>
                     <h1>PM Day Chart</h1>
                         <Line options = {{
                             responsive: true,
-                        }}
+                         }}
                             data = {getChartData(values)}
                         />
-     </div>
-    );
+             </div>
+        );
+    }
 }
 function getChartData(values){
 
