@@ -19,7 +19,7 @@ function PmChart(){
 
   return( 
     <div className="App" style = {{position: "relative", height:1000, width:1000}}>
-         <h1>PM Hour Chart</h1>
+         <h1>PM Day Chart</h1>
             <Line options = {{
                   responsive: true,
             }}
