@@ -15,7 +15,7 @@ function PmChart(){
       }
       useEffect(() => {
         fetchData();
-      });
+      }, []);
 
   return( 
     <div className="App" style = {{position: "relative", height:1000, width:1000}}>
