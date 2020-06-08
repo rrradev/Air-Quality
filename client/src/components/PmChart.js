@@ -1,34 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import {Line} from 'react-chartjs-2';
 
+
 function PmChart(){
+    const [hasError, setErrors] = useState(false);
+    const [values, setValues] = useState([]);
+
+    async function fetchData() {
+        const res = await fetch("/api/data");
+        res
+          .json()
+          .then(res => setValues(res))
+          .catch(err => setErrors(err))
+      }
+      useEffect(() => {
+        fetchData();
+      });
+
+  return( 
+    <div className="App" style = {{position: "relative", height:1000, width:1000}}>
+         <h1>PM Hour Chart</h1>
+            <Line options = {{
+                  responsive: true,
+            }}
+                data = {getChartData(values)}
+        />
+    </div>
+  );
+}
+function getChartData(values){
+
     var data = {
-        labels: [1,2,3,4,5],
+        labels: values.map(item => (item.date)),
         datasets:[
             {
                 label: "PM 2.5",
                 backgroundColor: "rgba(255, 0, 255, 0.75)",
-                data: [25,22,50,36,5]
+                data: values.map(item => (item.pm25))
             },
             {
                 label: "PM 10",
                 backgroundColor: "rgba(0, 255, 0, 0.75)",
-                data: [100,150,220,70,90]
+                data: values.map(item => (item.pm10))
             }
         ]
 
     }
-
-    return(  
-        <div className="App" style = {{position: "relative", height:500, width:500}}>
-             <h1>PM Chart</h1>
-            <Line options = {{
-                responsive: true,
-            }}
-                data = {data}
-            />
-        </div>
-    );
+    return data;
 }
-
 export default PmChart;

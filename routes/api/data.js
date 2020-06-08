@@ -11,7 +11,8 @@ const Data = require('../../models/Data');
 router.get('/', (req, res) => {
     console.log("GET req");
     Data.find()
-    .sort({date: -1})
+    .sort({date: 1})
+    .limit(288)
     .then(data => res.json(data));
 });
 
