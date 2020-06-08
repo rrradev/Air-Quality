@@ -1,19 +1,11 @@
 import React, { useEffect, useState} from 'react';
 import {Line} from 'react-chartjs-2';
 
-
 function PmChart(){
     const [error, setError] = useState(false);
     const [values, setValues] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // async function fetchData() {
-    //     const res = await fetch("/api/data");
-    //     res
-    //       .json()
-    //       .then(res => setValues(res))
-    //       .catch(err => setErrors(err))
-    //   }
       useEffect(() => {
         fetch("/api/data")
         .then(res => res.json())
@@ -52,17 +44,19 @@ function PmChart(){
 function getChartData(values){
 
     var data = {
-        labels: values.map(item => (item.date)),
+        labels: values.map(item => 
+            new Date(item.date)
+                .toLocaleTimeString()),
         datasets:[
             {
                 label: "PM 2.5",
                 backgroundColor: "rgba(255, 0, 255, 0.75)",
-                data: values.map(item => (item.pm25))
+                data: values.map(item => item.pm25)
             },
             {
                 label: "PM 10",
                 backgroundColor: "rgba(0, 255, 0, 0.75)",
-                data: values.map(item => (item.pm10))
+                data: values.map(item => item.pm10)
             }
         ]
 

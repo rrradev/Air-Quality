@@ -10,7 +10,9 @@ const Data = require('../../models/Data');
 // @acc     Public (for now)
 router.get('/', (req, res) => {
     console.log("GET req");
-    var pastDay = new Date(new Date().getTime() - (24 * 60 * 60 * 1000));
+    var pastDay = new Date(
+        new Date()
+            .getTime() - (24 * 60 * 60 * 1000));
     Data
     .find({ "date": { "$gte": pastDay } })
     .sort({date: 1})
