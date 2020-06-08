@@ -3,30 +3,51 @@ import {Line} from 'react-chartjs-2';
 
 
 function PmChart(){
-    const [hasError, setErrors] = useState(false);
+    const [error, setError] = useState(false);
     const [values, setValues] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-    async function fetchData() {
-        const res = await fetch("/api/data");
-        res
-          .json()
-          .then(res => setValues(res))
-          .catch(err => setErrors(err))
-      }
+    // async function fetchData() {
+    //     const res = await fetch("/api/data");
+    //     res
+    //       .json()
+    //       .then(res => setValues(res))
+    //       .catch(err => setErrors(err))
+    //   }
       useEffect(() => {
-        fetchData();
+        fetch("/api/data")
+        .then(res => res.json())
+        .then(
+            (values) => {
+                setIsLoaded(true);
+                setValues(values)
+        },
+            (error) => {
+                setIsLoaded(true);
+                setError(error);
+            }
+        )
       }, []);
+    if(error){
+        return <div>Error: {error.message}</div>;       
+    } else if(!isLoaded){
+        return <div>Loading...</div>;
+    } else{
 
-  return( 
-    <div className="App" style = {{position: "relative", height:1000, width:1000}}>
-         <h1>PM Day Chart</h1>
-            <Line options = {{
-                  responsive: true,
-            }}
-                data = {getChartData(values)}
-        />
-    </div>
-  );
+    }
+         return( 
+            <div className="App" style = {
+                {position: "relative",
+                height:1000, 
+                width:1000}}>
+                    <h1>PM Day Chart</h1>
+                        <Line options = {{
+                            responsive: true,
+                        }}
+                            data = {getChartData(values)}
+                        />
+     </div>
+    );
 }
 function getChartData(values){
 
