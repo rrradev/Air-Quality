@@ -13,7 +13,7 @@ const DataSchema = new Schema({
     },
     date: {
         type: Date,
-        default: Date.now
+        default: new Date()
     }
 });
 
