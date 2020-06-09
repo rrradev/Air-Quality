@@ -9,7 +9,7 @@ const Data = require('../../models/Data');
 // @desc    Get sensor data for the past 24 hours
 // @acc     Public (for now)
 router.get('/', (req, res) => {
-    console.log("GET req");
+    console.log("GET day data");
     var pastDay = new Date(
         new Date()
             .getTime() - (24 * 60 * 60 * 1000));
