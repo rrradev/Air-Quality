@@ -1,6 +1,6 @@
 const secrets = require('../secrets');
 
-    const mongoURI;
+    var mongoURI;
 
     if(process.env.NODE_ENV ==='production'){
         mongoURI = 'mongodb+srv://' + process.env.DATABASE_USER + ':' +
