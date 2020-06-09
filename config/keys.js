@@ -1,4 +1,3 @@
-const secrets = require('../secrets');
 
     var mongoURI;
 
@@ -7,6 +6,7 @@ const secrets = require('../secrets');
         process.env.DATABASE_PASSWORD + '@homeserver-ayepl.mongodb.net/' + 
         process.env.DATABASE_NAME + '?retryWrites=true&w=majority';;
     } else {
+        const secrets = require('../secrets');
         mongoURI = 'mongodb+srv://' + secrets.requestDB(`username`) + ':' +
         secrets.requestDB('password') + '@homeserver-ayepl.mongodb.net/' + 
         secrets.requestDB('name') + '?retryWrites=true&w=majority';
