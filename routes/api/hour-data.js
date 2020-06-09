@@ -9,7 +9,7 @@ const Data = require('../../models/Data');
 // @desc    Get sensor data for the past hour
 // @acc     Public (for now)
 router.get('/', (req, res) => {
-    console.log("GET req");
+    console.log("GET hour data");
     var pastHour = new Date(
         new Date()
             .getTime() - (1 * 60 * 60 * 1000));

@@ -1,7 +1,7 @@
 const secrets = require('../secrets');
 
 module.exports =  {
-    mongoURI: 'mongodb+srv://' + secrets.request(`username`) + ':' +
-    secrets.request('password') + '@homeserver-ayepl.mongodb.net/' + 
-    secrets.request('dbname') + '?retryWrites=true&w=majority'
+    mongoURI: 'mongodb+srv://' + secrets.requestDB(`username`) + ':' +
+    secrets.requestDB('password') + '@homeserver-ayepl.mongodb.net/' + 
+    secrets.requestDB('name') + '?retryWrites=true&w=majority'
 }

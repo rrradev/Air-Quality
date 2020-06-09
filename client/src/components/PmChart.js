@@ -3,11 +3,12 @@ import {Line} from 'react-chartjs-2';
 import {Button, ButtonGroup, Row, Col} from 'reactstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-function PmChart(){
+function PmChart(props){
     const [error, setError] = useState(false);
     const [values, setValues] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [url, setUrl] = useState('/api/day-data')
+    const [api, setApi] = useState('/api/day-data');
+    const [toggledButton, setToggledButton] = useState(1);
     
     const getChartData = () => {
         var data = {
@@ -30,8 +31,24 @@ function PmChart(){
         }
         return data;
     }
-      useEffect(() => {
-        fetch(url)
+    const handleClick = (id) => {   
+            switch(id){  
+                case 2:
+                    setApi('/api/12hour-data');
+                    break;  
+                case 3:
+                     setApi('/api/3hour-data');
+                    break;
+                case 4:
+                    setApi('/api/hour-data');
+                    break;  
+                default: 
+                    setApi('/api/day-data');
+            }
+            setToggledButton(id);      
+    }    
+    useEffect(() => {
+        fetch(api)
         .then(res => res.json())
         .then(
             (values) => {
@@ -43,7 +60,7 @@ function PmChart(){
                 setError(error);
             }
         )
-      },[url]);
+      },[api]);
     if(error){
         return <div>Error: {error.message}</div>;       
     } else if(!isLoaded){
@@ -55,10 +72,18 @@ function PmChart(){
                     <Row>  
                         <Col>                  
                         <ButtonGroup>
-                            <Button onClick={() => setUrl('/api/day-data')}>24h</Button>{' '}
-                            <Button onClick={() => setUrl('/api/12hour-data')}>12h</Button>{' '}
-                            <Button onClick={() => setUrl('/api/3hour-data')}>3h</Button>{' '}
-                            <Button onClick={() => setUrl('/api/hour-data')}>1h</Button>{' '}
+                            <Button onClick={ev => handleClick(1)}   
+                                    active = {(toggledButton===1)}
+                            >24h</Button>{' '}
+                            <Button onClick={ev => handleClick(2)}   
+                                    active = {(toggledButton===2)}
+                            >12h</Button>{' '}
+                            <Button onClick={ev => handleClick(3)}   
+                                    active = {(toggledButton===3)}
+                            >3h</Button>{' '}
+                            <Button onClick={ev => handleClick(4)}   
+                                    active = {(toggledButton===4)}
+                            >1h</Button>{' '}
                         </ButtonGroup>
                         </Col>
                     </Row>
