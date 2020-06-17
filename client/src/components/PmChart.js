@@ -73,16 +73,16 @@ function PmChart(){
                         <ButtonGroup>
                             <Button onClick={ev => handleClick(1)}   
                                     active = {(toggledButton===1)}
-                            >24h</Button>{' '}
+                            >24h</Button>
                             <Button onClick={ev => handleClick(2)}   
                                     active = {(toggledButton===2)}
-                            >12h</Button>{' '}
+                            >12h</Button>
                             <Button onClick={ev => handleClick(3)}   
                                     active = {(toggledButton===3)}
-                            >3h</Button>{' '}
+                            >3h</Button>
                             <Button onClick={ev => handleClick(4)}   
                                     active = {(toggledButton===4)}
-                            >1h</Button>{' '}
+                            >1h</Button>
                         </ButtonGroup>
                         </Col>
                     </Row>
