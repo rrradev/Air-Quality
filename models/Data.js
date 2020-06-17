@@ -11,6 +11,14 @@ const DataSchema = new Schema({
         type: Number,
         required: true
     },
+    temp: {
+        type: Number,
+        required: true
+    },
+    hum: {
+        type: Number,
+        required: true
+    },
     date: {
         type: Date,
         required: true
