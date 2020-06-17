@@ -13,6 +13,8 @@ router.post('/', (req, res) => {
     const newData = new Data({
         pm25: req.body.pm25,
         pm10: req.body.pm10,
+        temp: req.body.temp,
+        hum: req.body.hum,
         date: Date.now()
     });
      newData.save()

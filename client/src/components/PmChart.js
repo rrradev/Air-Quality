@@ -1,9 +1,8 @@
 import React, { useEffect, useState} from 'react';
 import {Line} from 'react-chartjs-2';
 import {Button, ButtonGroup, Row, Col} from 'reactstrap'
-import 'bootstrap/dist/css/bootstrap.min.css'
 
-function PmChart(props){
+function PmChart(){
     const [error, setError] = useState(false);
     const [values, setValues] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
