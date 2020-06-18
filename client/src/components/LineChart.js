@@ -2,18 +2,14 @@ import React, {useEffect, useState} from 'react';
 import ChartButtons from './ChartButtonGroup';
 import {Line} from 'react-chartjs-2';
 
-function LineChart(props){
-
-    const name = props.name;
-    const color = props.color;
-    const id = props.id;
+function LineChart(props){ 
 
     const [values, setValues] = useState([]);
     const [error, setError] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const [api, setApi] = useState("/api/day-data");
     
-    var hadnle = (id) => {
+    const handle = (id) => {
         switch(id){
             case 2:
                 setApi("/api/12hour-data");
@@ -28,6 +24,23 @@ function LineChart(props){
                 setApi("/api/day-data");        
         }
     }
+
+    const getDatasets = () => {
+        var datasets = [];
+
+        for(var i = 0; i < props.datasets.length; i++){
+            datasets.push(
+                {
+                    label: props.datasets[i].label,
+                    backgroundColor: props.datasets[i].color,
+                    data: values.map(item => item[props.datasets[i].id])
+                }
+            );
+        }
+
+        return datasets;
+    }
+    
     useEffect(() => {
         fetch(api)
         .then(res => res.json())
@@ -54,21 +67,15 @@ function LineChart(props){
     } else {
         return(
             <div className="container-sm border">
-                <h3>{props.name} Chart</h3>
-                <ChartButtons api={hadnle}/>
+                <h3>{props.name} chart</h3>
+                <ChartButtons api={handle}/>
                 <Line options={{responsive: true}}
                 data={
                     {
                         labels: values.map(item =>
                              new Date(item.date)
                                     .toLocaleTimeString()),
-                        datasets:[
-                            {
-                                label: name,
-                                backgroundColor: color,
-                                data: values.map(item => item[id])
-                            }
-                        ]
+                        datasets: getDatasets()
                     }
                 }/>
             </div>
@@ -76,5 +83,6 @@ function LineChart(props){
     }
 
 }
+
 
 export default LineChart;
