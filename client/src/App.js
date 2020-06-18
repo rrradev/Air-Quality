@@ -1,20 +1,48 @@
 import React from 'react';
-import PmChart from './components/PmChart';
 import LineChart from './components/LineChart'
-
 
 function App() {
 
     return(
         <div>
-            <PmChart />
-            <LineChart name="Temperature" 
-                color="rgba(240, 52, 52, 1)" 
-                id="temp"
+            <LineChart name="Particulate matter"
+                datasets={[
+                    {
+                        id: "pm25",
+                        color: "rgb(255,0,255)",
+                        label: "PM25"
+                       
+                    },
+                    {
+                        id: "pm10",
+                        color: "rgba(0, 230, 64, 1)",
+                        label: "PM10"
+                       
+                    }
+                ]}
             />
+
+            <LineChart name="Temperature"
+                datasets={[
+                    {
+                        id: "temp",
+                        color: "rgba(240, 52, 52, 1)",
+                        label: "Temperature"
+                       
+                    }
+                ]}
+            />
+            
             <LineChart name="Humidity"
-                color="rgba(30, 139, 195, 1)"
-                id="hum"
+                datasets={[
+                    {
+                        id: "hum",
+                        color: "rgba(30, 139, 195, 1)",
+                        label: "Humidity"
+                    }
+
+                ]}
+
             />
         </div>
     );
