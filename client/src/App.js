@@ -5,7 +5,6 @@ import LineChart from './components/LineChart'
 
 function App() {
 
- 
     return(
         <div>
             <PmChart />

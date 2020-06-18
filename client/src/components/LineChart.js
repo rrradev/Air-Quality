@@ -11,10 +11,25 @@ function LineChart(props){
     const [values, setValues] = useState([]);
     const [error, setError] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [api, setApi] = useState("/api/day-data");
     
-    
+    var hadnle = (id) => {
+        switch(id){
+            case 2:
+                setApi("/api/12hour-data");
+                break;
+            case 3:
+                setApi("/api/3hour-data");
+                break;
+            case 4:
+                setApi("/api/hour-data");
+                break;
+            default:
+                setApi("/api/day-data");        
+        }
+    }
     useEffect(() => {
-        fetch("/api/day-data")
+        fetch(api)
         .then(res => res.json())
         .then(
             (values) => {
@@ -26,7 +41,7 @@ function LineChart(props){
                 setIsLoaded(true);
             }
         )
-      },[]);
+      },[api]);
     
     if(!isLoaded){
         return(
@@ -40,7 +55,7 @@ function LineChart(props){
         return(
             <div className="container-sm border">
                 <h3>{props.name} Chart</h3>
-                <ChartButtons />
+                <ChartButtons api={hadnle}/>
                 <Line options={{responsive: true}}
                 data={
                     {
