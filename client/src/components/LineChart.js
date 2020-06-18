@@ -1,33 +1,65 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ChartButtons from './ChartButtonGroup';
 import {Line} from 'react-chartjs-2';
 
 function LineChart(props){
 
-    var labels = props.labels;
-    var name = props.name;
-    var color = props.color;
-    var values = props.values;
+    const name = props.name;
+    const color = props.color;
+    const id = props.id;
 
-    return(
-        <div className="container-sm border">
-        <h3>{props.name} Chart</h3>
-        <ChartButtons />
-        <Line options={{responsive: true}}
-        data={
-            {
-                labels: labels,
-                datasets:[
-                    {
-                        label: name,
-                        backgroundColor: color,
-                        data: values
-                    }
-                ]
+    const [values, setValues] = useState([]);
+    const [error, setError] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+    
+    
+    useEffect(() => {
+        fetch("/api/day-data")
+        .then(res => res.json())
+        .then(
+            (values) => {
+                setValues(values);
+                setIsLoaded(true);
+        },
+            (error) => {
+                setError(error);
+                setIsLoaded(true);
             }
-        }/>
-        </div>
-    );
+        )
+      },[]);
+    
+    if(!isLoaded){
+        return(
+            <div>Loading...</div>
+        );
+    } else if(error){
+        return(
+            <div>Error: {error.message}</div>
+        );
+    } else {
+        return(
+            <div className="container-sm border">
+                <h3>{props.name} Chart</h3>
+                <ChartButtons />
+                <Line options={{responsive: true}}
+                data={
+                    {
+                        labels: values.map(item =>
+                             new Date(item.date)
+                                    .toLocaleTimeString()),
+                        datasets:[
+                            {
+                                label: name,
+                                backgroundColor: color,
+                                data: values.map(item => item[id])
+                            }
+                        ]
+                    }
+                }/>
+            </div>
+        );
+    }
+
 }
 
 export default LineChart;
