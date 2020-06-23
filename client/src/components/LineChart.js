@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ChartButtons from './ChartButtonGroup';
 import {Line} from 'react-chartjs-2';
+import { Spinner, Container, Row, Col} from 'reactstrap';
 
 function LineChart(props){ 
 
@@ -9,7 +10,7 @@ function LineChart(props){
     const [isLoaded, setIsLoaded] = useState(false);
     const [api, setApi] = useState("/api/day-data");
     
-    const handle = (id) => {
+    const handleApiReq = (id) => {
         switch(id){
             case 2:
                 setApi("/api/12hour-data");
@@ -28,7 +29,7 @@ function LineChart(props){
     const getDatasets = () => {
         var datasets = [];
 
-        for(var i = 0; i < props.datasets.length; i++){
+        for(let i = 0; i < props.datasets.length; i++){
             datasets.push(
                 {
                     label: props.datasets[i].label,
@@ -37,7 +38,6 @@ function LineChart(props){
                 }
             );
         }
-
         return datasets;
     }
     
@@ -56,9 +56,16 @@ function LineChart(props){
         )
       },[api]);
     
-    if(!isLoaded){
+    if(false){
         return(
-            <div>Loading...</div>
+            <div>
+                <div className="mt-3 mb-3">
+                <Spinner color="primary" />
+                </div>
+                <Line options={{responsive: true}}>
+                    <span>jeee</span>
+                </Line>
+            </div>
         );
     } else if(error){
         return(
@@ -66,10 +73,24 @@ function LineChart(props){
         );
     } else {
         return(
-            <div className="container-sm border">
-                <h3>{props.name} chart</h3>
-                <ChartButtons api={handle}/>
-                <Line options={{responsive: true}}
+            <Container> 
+                <Row>
+                    <Col>
+                        <h4>{props.name} chart</h4>
+                    </Col>
+                </Row>  
+                <Row>
+                        <ChartButtons api={handleApiReq}/>
+                        {!isLoaded &&
+                        <div className="ml-3">
+                            <Spinner color="primary" />
+                        </div>
+                        }   
+                </Row>
+                <Row>
+                <Line options={
+                    {responsive: true}
+                }
                 data={
                     {
                         labels: values.map(item =>
@@ -78,11 +99,11 @@ function LineChart(props){
                         datasets: getDatasets()
                     }
                 }/>
-            </div>
+                </Row>
+            </Container>
         );
     }
 
 }
-
 
 export default LineChart;
