@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ChartButtons from './ChartButtonGroup';
 import {Line} from 'react-chartjs-2';
-import { Spinner, Container, Row, Col} from 'reactstrap';
+import { Spinner, Container, Row} from 'reactstrap';
 
 function LineChart(props){ 
 
@@ -34,7 +34,8 @@ function LineChart(props){
                 {
                     label: props.datasets[i].label,
                     backgroundColor: props.datasets[i].color,
-                    data: values.map(item => item[props.datasets[i].id])
+                    data: values.map(item => item[props.datasets[i].id]),
+                    pointRadius: 0
                 }
             );
         }
@@ -77,7 +78,19 @@ function LineChart(props){
                 </Row>
                 <Row>
                     <Line options={
-                        {responsive: true}
+                        {responsive: true,
+                            scales: {
+                                xAxes:[{
+                                    ticks:{
+                                        display: true,
+                                        autoSkip: true,
+                                        maxTicksLimit: 10,
+                                        maxRotation: 0,
+                                        minRotation: 0
+                                    }
+                                }]
+                            }
+                        }
                     }
                     height="125%"
                     data={
