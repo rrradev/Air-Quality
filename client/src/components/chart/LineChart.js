@@ -80,6 +80,7 @@ function LineChart(props){
                     <Line options={
                         {responsive: true}
                     }
+                    height="125%"
                     data={
                         {
                             labels: values.map(item =>
