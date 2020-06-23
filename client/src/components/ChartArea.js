@@ -27,7 +27,7 @@ function ChartArea(){
                     {
                         id: "temp",
                         color: "rgba(240, 52, 52, 1)",
-                        label: "Temperature"
+                        label: "Temperature °C"
                         
                     }
                 ]}
@@ -37,7 +37,7 @@ function ChartArea(){
                     {
                         id: "hum",
                         color: "rgba(30, 139, 195, 1)",
-                        label: "Humidity"
+                        label: "Humidity %"
                     }
                 ]}
             />

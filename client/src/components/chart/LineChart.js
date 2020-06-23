@@ -64,9 +64,8 @@ function LineChart(props){
         return(
             <Container> 
                 <Row>
-                    <Col>
-                        <h4>{props.name} chart</h4>
-                    </Col>
+                    <h4>{props.name} chart</h4>
+
                 </Row>  
                 <Row>
                      <ChartButtons api={handleAPI}/>
