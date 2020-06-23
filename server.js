@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const db = require('./config/keys');
+const db = require('./config/keys').mongoURI;
 const data = require('./routes/api/data');
 const hourData = require('./routes/api/hour-data');
 const $3hourData = require('./routes/api/3hour-data');

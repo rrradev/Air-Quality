@@ -1,13 +1,12 @@
 const express = require('express');
-
 const router = express.Router();
 
-//Sensor data model
-
+//Sensor data DB model
 const Data = require('../../models/Data');
-// @route   GET /api/data
+
+// @route   GET /api/3hour-data
 // @desc    Get sensor data for the past 3 hours
-// @acc     Public (for now)
+// @acc     Public
 router.get('/', (req, res) => {
     console.log("GET 3hour data");
     var past3Hours = new Date(

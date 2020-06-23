@@ -1,14 +1,14 @@
 const express = require('express');
-
 const router = express.Router();
+const auth = require('../../middleware/auth');
 
-//Sensor data model
+//Sensor data DB model
 const Data = require('../../models/Data');
 
 // @route   POST /api/data
 // @desc    Post data to db
-// @acc     Public (for now)
-router.post('/', (req, res) => {
+// @acc     Private
+router.post('/', auth, (req, res) => {
     console.log('POST post');
     const newData = new Data({
         pm25: req.body.pm25,
