@@ -4,11 +4,10 @@ import {Container, Row, Col, Navbar} from 'reactstrap';
 import NavBar from './components/NavBar';
 
 function App() {
-
+    
     return(
         <div>
             <NavBar />
-            <Container className>
                 <LineChart name="Particulate matter"
                     datasets={[
                         {
@@ -44,7 +43,7 @@ function App() {
                         }
                     ]}
                 />
-            </Container>
+            
         </div>
     );
 }
