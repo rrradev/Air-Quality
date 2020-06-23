@@ -10,7 +10,7 @@ function LineChart(props){
     const [isLoaded, setIsLoaded] = useState(false);
     const [api, setApi] = useState("/api/day-data");
     
-    const handleApiReq = (id) => {
+    const handleAPI = (id) => {
         switch(id){
             case 2:
                 setApi("/api/12hour-data");
@@ -56,18 +56,7 @@ function LineChart(props){
         )
       },[api]);
     
-    if(false){
-        return(
-            <div>
-                <div className="mt-3 mb-3">
-                <Spinner color="primary" />
-                </div>
-                <Line options={{responsive: true}}>
-                    <span>jeee</span>
-                </Line>
-            </div>
-        );
-    } else if(error){
+    if(error){
         return(
             <div>Error: {error.message}</div>
         );
@@ -80,30 +69,29 @@ function LineChart(props){
                     </Col>
                 </Row>  
                 <Row>
-                        <ChartButtons api={handleApiReq}/>
-                        {!isLoaded &&
-                        <div className="ml-3">
-                            <Spinner color="primary" />
-                        </div>
-                        }   
+                     <ChartButtons api={handleAPI}/>
+                    {!isLoaded &&
+                    <span className="ml-3">
+                        <Spinner color="primary" />
+                    </span>
+                    }   
                 </Row>
                 <Row>
-                <Line options={
-                    {responsive: true}
-                }
-                data={
-                    {
-                        labels: values.map(item =>
-                             new Date(item.date)
-                                    .toLocaleTimeString()),
-                        datasets: getDatasets()
+                    <Line options={
+                        {responsive: true}
                     }
-                }/>
+                    data={
+                        {
+                            labels: values.map(item =>
+                                new Date(item.date)
+                                        .toLocaleTimeString()),
+                            datasets: getDatasets()
+                        }
+                    }/>
                 </Row>
             </Container>
         );
     }
-
 }
 
 export default LineChart;
