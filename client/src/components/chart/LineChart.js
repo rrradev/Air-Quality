@@ -91,7 +91,16 @@ function LineChart(props){
                                         maxRotation: 0,
                                         minRotation: 0
                                     }
-                                }]
+                                }],
+                                yAxes:[{
+                                    ticks:{
+                                        display: true,
+                                        autoSkip: true,
+                                        maxTicksLimit: 7,
+                                        maxRotation: 0,
+                                        minRotation: 0
+                                    }
+                                }],
                             },
                             animation: {
                                 duration: 250,
