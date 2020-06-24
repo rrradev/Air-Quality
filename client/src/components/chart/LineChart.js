@@ -76,7 +76,8 @@ function LineChart(props){
                 </Row>
                 <Row>
                     <Line options={
-                        {responsive: true,
+                        {
+                            responsive: true,
                             scales: {
                                 xAxes:[{
                                     ticks:{
@@ -87,7 +88,14 @@ function LineChart(props){
                                         minRotation: 0
                                     }
                                 }]
-                            }
+                            },
+                            animation: {
+                                duration: 250,
+                                numSteps: 7,
+                                easing: "easeOutQuart"
+                        },
+
+                        
                         }
                     }
                     height="125%"
