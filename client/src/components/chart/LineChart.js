@@ -25,7 +25,6 @@ function LineChart(props){
                 setApi("/api/day-data");        
         }
     }
-
     const getDatasets = () => {
         var datasets = [];
 
@@ -40,8 +39,7 @@ function LineChart(props){
             );
         }
         return datasets;
-    }
-    
+    }   
     useEffect(() => {
         fetch(api)
         .then(res => res.json())
@@ -71,9 +69,9 @@ function LineChart(props){
                 <Row>
                      <ChartButtons api={handleAPI}/>
                     {!isLoaded &&
-                    <span className="ml-3">
+                    <div className="ml-3">
                         <Spinner color="primary" />
-                    </span>
+                    </div>
                     }   
                 </Row>
                 <Row>
@@ -84,7 +82,7 @@ function LineChart(props){
                                     ticks:{
                                         display: true,
                                         autoSkip: true,
-                                        maxTicksLimit: 10,
+                                        maxTicksLimit: 7,
                                         maxRotation: 0,
                                         minRotation: 0
                                     }
@@ -95,9 +93,18 @@ function LineChart(props){
                     height="125%"
                     data={
                         {
-                            labels: values.map(item =>
-                                new Date(item.date)
-                                        .toLocaleTimeString()),
+                            labels: values.map(item => {
+                                const date = new Date(item.date);
+                                const day = date.toLocaleDateString(navigator.language,
+                                    {day:'2-digit', month:'2-digit'});
+                                const time = date.toLocaleTimeString(navigator.language,
+                                    {hour: '2-digit', minute:'2-digit'});
+                                var labels = [];
+                                labels.push(time);
+                                labels.push(day);
+                                return(labels);         
+                            }),
+                                
                             datasets: getDatasets()
                         }
                     }/>
