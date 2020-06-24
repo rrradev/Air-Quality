@@ -10,11 +10,13 @@ const Data = require('../../models/Data');
 // @acc     Private
 router.post('/', auth, (req, res) => {
     console.log('POST post');
+    const {pm25, pm10, temp, hum} = req.body;
+
     const newData = new Data({
-        pm25: req.body.pm25,
-        pm10: req.body.pm10,
-        temp: req.body.temp,
-        hum: req.body.hum,
+        pm25,
+        pm10,
+        temp,
+        hum,
         date: Date.now()
     });
      newData.save()
