@@ -64,13 +64,17 @@ function LineChart(props){
             <Container> 
                 <Row>
                     <h4>{props.name} chart</h4>
-
                 </Row>  
-                <Row>
-                     <ChartButtons api={handleAPI}/>
+                <Row className="align-items-center">
+                    <ChartButtons api={handleAPI} />
                     {!isLoaded &&
                     <div className="ml-3">
-                        <Spinner color="primary" />
+                        <Spinner
+                            color="primary" 
+                            style={
+                                    { width: '1.8rem', height: '1.8rem' }
+                            } 
+                        />
                     </div>
                     }   
                 </Row>
@@ -93,9 +97,7 @@ function LineChart(props){
                                 duration: 250,
                                 numSteps: 7,
                                 easing: "easeOutQuart"
-                        },
-
-                        
+                            },
                         }
                     }
                     height="125%"
@@ -111,8 +113,7 @@ function LineChart(props){
                                 labels.push(time);
                                 labels.push(day);
                                 return(labels);         
-                            }),
-                                
+                            }),    
                             datasets: getDatasets()
                         }
                     }/>
