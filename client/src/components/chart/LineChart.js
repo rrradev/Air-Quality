@@ -25,12 +25,29 @@ function LineChart(props){
                 setApi("/api/day-data");        
         }
     }
+    const getChartData = () => {
+
+        return {    
+                labels: values.map(item => {
+                    const date = new Date(item.date);
+                    const day = date.toLocaleDateString(navigator.language,
+                        {day:'2-digit', month:'2-digit'});
+                    const time = date.toLocaleTimeString(navigator.language,
+                        {hour: '2-digit', minute:'2-digit'});
+                    var labels = [];
+                    labels.push(time);
+                    labels.push(day);
+                    return(labels);         
+                }),    
+                datasets: getDatasets()      
+        }
+    }
     const getDatasets = () => {
         var datasets = [];
 
         for(let i = 0; i < props.datasets.length; i++){
             datasets.push(
-                {
+                {  
                     label: props.datasets[i].label,
                     backgroundColor: props.datasets[i].color,
                     data: values.map(item => item[props.datasets[i].id]),
@@ -106,26 +123,12 @@ function LineChart(props){
                                 duration: 250,
                                 numSteps: 7,
                                 easing: "easeOutQuart"
-                            },
+                            }
                         }
                     }
                     height="125%"
-                    data={
-                        {
-                            labels: values.map(item => {
-                                const date = new Date(item.date);
-                                const day = date.toLocaleDateString(navigator.language,
-                                    {day:'2-digit', month:'2-digit'});
-                                const time = date.toLocaleTimeString(navigator.language,
-                                    {hour: '2-digit', minute:'2-digit'});
-                                var labels = [];
-                                labels.push(time);
-                                labels.push(day);
-                                return(labels);         
-                            }),    
-                            datasets: getDatasets()
-                        }
-                    }/>
+                    data={getChartData()}/>
+                    
                 </Row>
             </Container>
         );
