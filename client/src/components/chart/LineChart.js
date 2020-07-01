@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import ChartButtons from './ChartButtonGroup';
 import {Line} from 'react-chartjs-2';
-import { Spinner, Container, Row} from 'reactstrap';
+import {Spinner, Card} from 'reactstrap';
+import LoadingOverlay from 'react-loading-overlay';
 
 function LineChart(props){ 
 
@@ -78,24 +79,21 @@ function LineChart(props){
         );
     } else {
         return(
-            <Container> 
-                <Row>
-                    <h4>{props.name} chart</h4>
-                </Row>  
-                <Row className="align-items-center">
-                    <ChartButtons api={handleAPI} />
-                    {!isLoaded &&
-                    <div className="ml-3">
-                        <Spinner
-                            color="primary" 
-                            style={
-                                    { width: '1.8rem', height: '1.8rem' }
-                            } 
-                        />
-                    </div>
-                    }   
-                </Row>
-                <Row>
+            <Card>   
+                <h5>{props.name}</h5>
+                <ChartButtons api={handleAPI} /> 
+                <LoadingOverlay 
+                    active={!isLoaded}
+                    spinner={
+                        <Spinner color="primary" />
+                    }
+                    styles={{
+                        overlay: (base) => ({
+                          ...base,
+                          background: 'rgba(255,255,255,0.5)'
+                        })
+                      }}
+                    >       
                     <Line options={
                         {
                             responsive: true,
@@ -126,11 +124,10 @@ function LineChart(props){
                             }
                         }
                     }
-                    height="125%"
-                    data={getChartData()}/>
-                    
-                </Row>
-            </Container>
+                        data={getChartData()}
+                    /> 
+                </LoadingOverlay>
+            </Card>    
         );
     }
 }

@@ -10,7 +10,8 @@ function ChartButtonGroup(props){
     }
 
     return(
-            <ButtonGroup>
+        <div>
+            <ButtonGroup size="sm"> 
                   <Button id="1"
                     onClick={ev => handleClick(ev.target.id)}
                     active={(toggledButton === 1)}>     
@@ -31,7 +32,8 @@ function ChartButtonGroup(props){
                     onClick={ev => handleClick(ev.target.id)}>
                     1h
                 </Button>
-            </ButtonGroup>   
+            </ButtonGroup>  
+        </div> 
     );
 }
 
