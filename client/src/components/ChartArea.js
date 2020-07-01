@@ -1,16 +1,16 @@
 import React from 'react';
-import {Container} from 'reactstrap';
+import {Card} from 'reactstrap';
 import LineChart from './chart/LineChart'
 
 function ChartArea(){
 
     return(
-        <Container>
+        <div>
             <LineChart name="Particulate matter"
                 datasets={[
                     {
                         id: "pm25",
-                        color: "rgb(255,0,255)",
+                        color: "rgb(255, 0, 255, 1)",
                         label: "PM25"
                         
                     },
@@ -41,7 +41,7 @@ function ChartArea(){
                     }
                 ]}
             />
-        </Container>
+        </div>
     );
 }
 
