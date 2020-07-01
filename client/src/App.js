@@ -1,7 +1,7 @@
 import React from 'react';
 import NavBar from './components/NavBar';
 import ChartArea from './components/ChartArea'
-import { Card, Container } from 'reactstrap';
+import {Container} from 'reactstrap';
 
 function App() {
 

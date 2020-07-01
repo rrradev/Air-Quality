@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ChartButtons from './ChartButtonGroup';
 import {Line} from 'react-chartjs-2';
-import {Spinner, Card} from 'reactstrap';
+import {Spinner} from 'reactstrap';
 import LoadingOverlay from 'react-loading-overlay';
 
 function LineChart(props){ 
@@ -25,6 +25,7 @@ function LineChart(props){
             default:
                 setApi("/api/day-data");        
         }
+        setIsLoaded(false);
     }
     const getChartData = () => {
 
@@ -79,7 +80,7 @@ function LineChart(props){
         );
     } else {
         return(
-            <Card>   
+            <div>   
                 <h5>{props.name}</h5>
                 <ChartButtons api={handleAPI} /> 
                 <LoadingOverlay 
@@ -127,7 +128,7 @@ function LineChart(props){
                         data={getChartData()}
                     /> 
                 </LoadingOverlay>
-            </Card>    
+            </div>    
         );
     }
 }
