@@ -5,7 +5,7 @@ import LineChart from './chart/LineChart'
 function ChartArea(){
 
     return(
-        <Container >   
+        <Container>
             <LineChart name="Particulate matter"
                 datasets={[
                     {
