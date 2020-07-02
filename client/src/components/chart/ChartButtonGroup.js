@@ -5,6 +5,10 @@ function ChartButtonGroup(props){
     const [toggledButton, setToggledButton] = useState(1);
 
     function handleClick(id){
+        if(id == toggledButton){
+            return;
+        }
+
         setToggledButton(Number(id));
         props.api(Number(id));
     }
