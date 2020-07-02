@@ -32,13 +32,13 @@ function LineChart(props){
         return {    
                 labels: values.map(item => {
                     const date = new Date(item.date);
-                    const day = date.toLocaleDateString(navigator.language,
-                        {day:'2-digit', month:'2-digit'});
+                    // const day = date.toLocaleDateString(navigator.language,
+                    //     {day:'2-digit', month:'2-digit'});
                     const time = date.toLocaleTimeString(navigator.language,
                         {hour: '2-digit', minute:'2-digit'});
                     var labels = [];
                     labels.push(time);
-                    labels.push(day);
+                    //labels.push(day);
                     return(labels);         
                 }),    
                 datasets: getDatasets()      
@@ -91,12 +91,15 @@ function LineChart(props){
                     styles={{
                         overlay: (base) => ({
                           ...base,
-                          background: 'rgba(255,255,255,0.5)'
+                          background: "rgba(255,255,255,0.5)"
                         })
                       }}
                     >       
                     <Line options={
-                        {
+                        {   
+                            tooltips: {
+                                intersect: false,
+                            },
                             responsive: true,
                             scales: {
                                 xAxes:[{
