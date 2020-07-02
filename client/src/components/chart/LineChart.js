@@ -12,14 +12,18 @@ function LineChart(props){
     const [api, setApi] = useState("/api/day-data");
     
     const handleAPI = (id) => {
+                   setValues([]);
         switch(id){
-            case 2:
-                setApi("/api/12hour-data");
+            case 1:
+                setApi("/api/week-data");
                 break;
             case 3:
-                setApi("/api/3hour-data");
+                setApi("/api/12hour-data");
                 break;
             case 4:
+                setApi("/api/3hour-data");
+                break;
+            case 5:
                 setApi("/api/hour-data");
                 break;
             default:
@@ -27,19 +31,27 @@ function LineChart(props){
         }
         setIsLoaded(false);
     }
-    const getChartData = () => {
 
+    const getChartData = () => {
+        console.log("getChartData called");
+        console.log("Api is " + api);
         return {    
-                labels: values.map(item => {
+                labels: values.map((item) => {
                     const date = new Date(item.date);
-                    // const day = date.toLocaleDateString(navigator.language,
-                    //     {day:'2-digit', month:'2-digit'});
+
                     const time = date.toLocaleTimeString(navigator.language,
                         {hour: '2-digit', minute:'2-digit'});
                     var labels = [];
                     labels.push(time);
-                    //labels.push(day);
-                    return(labels);         
+
+                    const day = date.toLocaleDateString(navigator.language,
+                    {day:'2-digit', month:'2-digit'});
+                    labels.push(day);
+                    
+                    if(api === "/api/week-data" && isLoaded)
+                        return labels;   
+                    else
+                        return labels[0];
                 }),    
                 datasets: getDatasets()      
         }
@@ -80,8 +92,8 @@ function LineChart(props){
         );
     } else {
         return(
-            <div>   
-                <h5>{props.name}</h5>
+            <div>  
+                 <h5>{props.name}</h5>
                 <ChartButtons api={handleAPI} /> 
                 <LoadingOverlay 
                     active={!isLoaded}
@@ -122,7 +134,7 @@ function LineChart(props){
                                 }],
                             },
                             animation: {
-                                duration: 250,
+                                duration: 500,
                                 numSteps: 7,
                                 easing: "easeOutQuart"
                             }
