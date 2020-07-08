@@ -118,9 +118,8 @@ function LineChart(props){
                                 })
                             }}
                             >       
-                            <Line
-                                width="300" 
-                                height="230"
+                            <Line className="line-chart" 
+                                height="230px"
                                 options={
                                 {  
                                     tooltips: {
