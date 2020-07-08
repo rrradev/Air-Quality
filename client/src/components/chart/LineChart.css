@@ -1,0 +1,12 @@
+.Title {
+    text-align: center;
+}
+
+.Buttons {
+    margin-left: 25px;
+}
+
+.ChartContainer {
+    margin-top: 10px;
+    box-shadow: 0px -2px 5px 0px rgba(145,145,145,1);
+}

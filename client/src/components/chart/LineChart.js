@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import ChartButtons from './ChartButtonGroup';
 import {Line} from 'react-chartjs-2';
-import {Spinner} from 'reactstrap';
+import {Spinner, Container, Row, Col} from 'reactstrap';
 import LoadingOverlay from 'react-loading-overlay';
+import './LineChart.css';
 
 function LineChart(props){ 
 
@@ -92,58 +93,70 @@ function LineChart(props){
         );
     } else {
         return(
-            <div>  
-                 <h5>{props.name}</h5>
-                <ChartButtons api={handleAPI} /> 
-                <LoadingOverlay 
-                    active={!isLoaded}
-                    spinner={
-                        <Spinner color="primary" />
-                    }
-                    styles={{
-                        overlay: (base) => ({
-                          ...base,
-                          background: "rgba(255,255,255,0.5)"
-                        })
-                      }}
-                    >       
-                    <Line options={
-                        {   
-                            tooltips: {
-                                intersect: false,
-                            },
-                            responsive: true,
-                            scales: {
-                                xAxes:[{
-                                    ticks:{
-                                        display: true,
-                                        autoSkip: true,
-                                        maxTicksLimit: 7,
-                                        maxRotation: 0,
-                                        minRotation: 0
-                                    }
-                                }],
-                                yAxes:[{
-                                    ticks:{
-                                        display: true,
-                                        autoSkip: true,
-                                        maxTicksLimit: 7,
-                                        maxRotation: 0,
-                                        minRotation: 0
-                                    }
-                                }],
-                            },
-                            animation: {
-                                duration: 500,
-                                numSteps: 7,
-                                easing: "easeOutQuart"
+            <Container className="ChartContainer">
+                <Row>
+                    <Col>
+                        <h5 className="Title">{props.name}</h5>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="Buttons">
+                        <ChartButtons api={handleAPI} /> 
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="Chart">
+                        <LoadingOverlay 
+                            active={!isLoaded}
+                            spinner={
+                                <Spinner color="primary" />
                             }
-                        }
-                    }
-                        data={getChartData()}
-                    /> 
-                </LoadingOverlay>
-            </div>    
+                            styles={{
+                                overlay: (base) => ({
+                                ...base,
+                                background: "rgba(255,255,255,0.5)"
+                                })
+                            }}
+                            >       
+                            <Line options={
+                                {  
+                                    tooltips: {
+                                        intersect: false,
+                                    },
+                                    responsive: true,
+                                    scales: {
+                                        xAxes:[{
+                                            ticks:{
+                                                display: true,
+                                                autoSkip: true,
+                                                maxTicksLimit: 7,
+                                                maxRotation: 0,
+                                                minRotation: 0
+                                            }
+                                        }],
+                                        yAxes:[{
+                                            ticks:{
+                                                display: true,
+                                                autoSkip: true,
+                                                maxTicksLimit: 7,
+                                                maxRotation: 0,
+                                                minRotation: 0
+                                            }
+                                        }],
+                                    },
+                                    animation: {
+                                        duration: 500,
+                                        numSteps: 7,
+                                        easing: "easeOutQuart"
+                                    }
+                                }
+                            }
+                                data={getChartData()}
+                            /> 
+                        </LoadingOverlay>
+                    </Col> 
+                </Row>
+            </Container>    
         );
     }
 }
