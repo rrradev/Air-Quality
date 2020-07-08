@@ -1,11 +1,10 @@
 import React from 'react';
-import {Container} from 'reactstrap';
 import LineChart from './chart/LineChart'
 
 function ChartArea(){
 
     return(
-        <Container>
+        <div className="chart-area">
             <LineChart name="Particulate matter"
                 datasets={[
                     {
@@ -38,7 +37,7 @@ function ChartArea(){
                     }
                 ]}
             />
-        </Container>
+        </div>
     );
 }
 
