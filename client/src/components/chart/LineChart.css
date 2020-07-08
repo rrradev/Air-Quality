@@ -1,12 +1,15 @@
-.Title {
+.title {
     text-align: center;
 }
 
-.Buttons {
+.buttons {
     margin-left: 25px;
 }
 
-.ChartContainer {
+.chart-container {
     margin-top: 10px;
     box-shadow: 0px -2px 5px 0px rgba(145,145,145,1);
+    height: 300px;
+    width: 300px;
+    background-color: #ffffff;
 }

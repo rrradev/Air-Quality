@@ -93,19 +93,19 @@ function LineChart(props){
         );
     } else {
         return(
-            <Container className="ChartContainer">
+            <Container className="chart-container">
                 <Row>
                     <Col>
-                        <h5 className="Title">{props.name}</h5>
+                        <h5 className="title">{props.name}</h5>
                     </Col>
                 </Row>
                 <Row>
-                    <Col className="Buttons">
+                    <Col className="buttons">
                         <ChartButtons api={handleAPI} /> 
                     </Col>
                 </Row>
                 <Row>
-                    <Col className="Chart">
+                    <Col>
                         <LoadingOverlay 
                             active={!isLoaded}
                             spinner={
@@ -118,12 +118,16 @@ function LineChart(props){
                                 })
                             }}
                             >       
-                            <Line options={
+                            <Line
+                                width="300" 
+                                height="230"
+                                options={
                                 {  
                                     tooltips: {
                                         intersect: false,
                                     },
                                     responsive: true,
+                                    maintainAspectRatio: false,
                                     scales: {
                                         xAxes:[{
                                             ticks:{
