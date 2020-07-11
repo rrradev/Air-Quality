@@ -102,7 +102,8 @@ function LineChart(props){
                 <Container className="chart-container">
                     <Row>
                         <Col>
-                            <h5 className="title">{props.name + 
+                            <h5 className="title">
+                                {props.name + 
                                 " over the last " + 
                                 range}</h5>
                         </Col>
