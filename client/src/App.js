@@ -1,6 +1,6 @@
 import React from 'react';
 import NavBar from './components/NavBar';
-import ChartArea from './components/ChartArea';
+import MainPanel from './components/MainPanel';
 import './App.css';
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
     return(
         <div className="app">
             <NavBar />
-            <ChartArea />   
+            <MainPanel />   
         </div>
     );
 }

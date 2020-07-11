@@ -1,21 +1,20 @@
 import React from 'react';
-import LineChart from './chart/LineChart'
+import LineChart from './LineChart';
 
-function ChartArea(){
-
+function ChartGroup(){
     return(
-        <div className="chart-area">
+        <div>
             <LineChart name="Particulate matter"
                 datasets={[
                     {
                         id: "pm25",
-                        color: "rgb(255, 0, 255, 1)",
-                        label: "PM25"        
+                        color: "rgba(145, 61, 136, 1)",
+                        label: "PM25 µg/㎥"        
                     },
                     {
                         id: "pm10",
-                        color: "rgba(0, 230, 64, 1)",
-                        label: "PM10"           
+                        color: "rgba(30, 130, 76, 1)",
+                        label: "PM10 µg/㎥"           
                     }
                 ]}
             />
@@ -23,7 +22,7 @@ function ChartArea(){
                 datasets={[
                     {
                         id: "temp",
-                        color: "rgba(240, 52, 52, 1)",
+                        color: "rgba(192, 57, 43, 1)",
                         label: "Temperature °C"        
                     }
                 ]}
@@ -32,7 +31,7 @@ function ChartArea(){
                 datasets={[
                     {
                         id: "hum",
-                        color: "rgba(30, 139, 195, 1)",
+                        color: "rgba(75, 119, 190, 1)",
                         label: "Humidity %"
                     }
                 ]}
@@ -41,4 +40,4 @@ function ChartArea(){
     );
 }
 
-export default ChartArea;
+export default ChartGroup;

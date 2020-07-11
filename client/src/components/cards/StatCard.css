@@ -1,0 +1,31 @@
+#pm25 {
+    background-color:  rgba(145, 61, 136, 1);
+}
+
+#pm10 {
+    background-color: rgba(30, 130, 76, 1);
+    display: flex;
+}
+
+#temp {
+    background-color: rgba(192, 57, 43, 1);
+}
+
+#hum {
+    background-color: rgba(75, 119, 190, 1);
+}
+
+.stat-card {
+    margin-top: 10px;
+    height: 80px;
+    box-shadow: 0px -2px 5px 0px rgba(145,145,145,1);
+}
+.card-title {
+    align-self: center;
+    font-size:19px
+}   
+
+.card-text {
+    align-self: center;
+    font-size: 26px;
+}

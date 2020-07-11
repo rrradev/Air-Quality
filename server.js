@@ -7,6 +7,7 @@ const $3hourData = require('./routes/api/3hour-data');
 const $12hourData = require('./routes/api/12hour-data');
 const dayData = require('./routes/api/day-data');
 const weekData = require('./routes/api/week-data');
+const lastRecord = require('./routes/api/last-record');
 const path = require('path');
 
 const app = express();
@@ -23,11 +24,15 @@ mongoose
     .catch(err => console.log(err));
 
 app.use('/api/data', data);
+app.use('/api/last-record', lastRecord);
 app.use('/api/hour-data', hourData);
 app.use('/api/3hour-data', $3hourData);
 app.use('/api/12hour-data', $12hourData);
 app.use('/api/day-data', dayData);
 app.use('/api/week-data', weekData);
+app.get('/img', (req, res) => {
+    res.sendFile(path.resolve(__dirname,'client', 'src', 'test.png'));
+})
 
 if(process.env.NODE_ENV ==='production'){
     app.use(express.static('client/build'));
