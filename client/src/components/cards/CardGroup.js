@@ -32,28 +32,32 @@ function CardArea() {
                             id="pm25"
                             text={ isLoaded ? 
                                 values.pm25 + " µg/㎥" : 
-                                defaultText }/>
+                                defaultText }
+                            imgURL="/icons/gas"/>
                     </Col>
                     <Col lg="3" sm="6">
                         <StatCard title="PM10"
                             id="pm10"
                             text={ isLoaded ? 
                                 values.pm10 + " µg/㎥" : 
-                                defaultText }/>
+                                defaultText }
+                            imgURL="/icons/gas"/>
                     </Col>
                     <Col lg="3" sm="6">
                         <StatCard title="Temperature"
                             id="temp"
                             text={ isLoaded ? 
                                 values.temp + " °C" : 
-                                defaultText }/>
+                                defaultText }
+                            imgURL="/icons/termometer"/>
                     </Col>
                     <Col lg="3" sm="6">
                         <StatCard title="Humidity"
                             id="hum"
                             text={ isLoaded ? 
                                 values.hum + " %" : 
-                                defaultText }/>
+                                defaultText }
+                            imgURL="/icons/humidity"/>
                     </Col>
                 </Row>
             </Container>
