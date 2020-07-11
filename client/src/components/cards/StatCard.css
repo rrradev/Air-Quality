@@ -21,6 +21,10 @@
     border-radius: 20px;
 }
 
+.stat-card:hover .image {
+    transform: scale(1.1);
+  }
+
 .card-title {
     margin-top: 5px;
     font-size:19px;
@@ -35,4 +39,6 @@
 .image {
     width: 80px;
     height: 80px;
+    transform: scale(1);
+    transition: .2s ease;
 }
