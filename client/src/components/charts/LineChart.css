@@ -1,6 +1,16 @@
-.title {
-    text-align: center;
-}
+@media screen and (min-width: 601px) {
+    .title {
+        text-align: center;
+        font-size: 20px;
+    }
+  }
+
+@media screen and (max-width: 601px) {
+    .title {
+        text-align: center;
+        font-size: 16px;
+    }
+  }
 
 .buttons {
     margin-left: 25px;
@@ -10,4 +20,5 @@
     margin-top: 10px;
     box-shadow: 0px -2px 5px 0px rgba(145,145,145,1);
     background-color: #ffffff;
+    height: 300px;
 }
