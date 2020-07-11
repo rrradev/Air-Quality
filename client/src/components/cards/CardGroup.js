@@ -52,7 +52,7 @@ function CardArea() {
                         <StatCard title="Humidity"
                             id="hum"
                             text={ isLoaded ? 
-                                values.temp + " %" : 
+                                values.hum + " %" : 
                                 defaultText }/>
                     </Col>
                 </Row>
