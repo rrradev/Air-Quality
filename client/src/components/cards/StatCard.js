@@ -1,20 +1,13 @@
 import React from 'react';
-import { Card, CardTitle, CardText, CardImg, CardImgOverlay, Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import './StatCard.css';
 
 function StatCard(props) {
     return(
-            // <Card className="stat-card"
-            //     id={props.id}
-            //     inverse>
-            //         <CardTitle className="card-title">{props.title}</CardTitle>
-            //         <CardText className="card-text">{props.text}</CardText>
-            //         <CardImg width="100%" src="/img" alt="Card image cap" />
-            // </Card>
         <Container className="stat-card"
             id={props.id}>
             <Row>
-                <Col>
+                <Col xs="auto">
                 <div style={{
                     textAlign: "left"
             
