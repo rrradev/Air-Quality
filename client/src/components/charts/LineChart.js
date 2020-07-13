@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ChartButtons from './ChartButtonGroup';
 import { Line } from 'react-chartjs-2';
-import { Spinner, Container, Row, Col, Fade } from 'reactstrap';
+import { Spinner, Container, Row, Col } from 'reactstrap';
 import LoadingOverlay from 'react-loading-overlay';
 import './LineChart.css';
 
@@ -12,6 +12,7 @@ function LineChart(props){
     const [isLoaded, setIsLoaded] = useState(false);
     const [api, setApi] = useState("/api/day-data");
     const [range, setRange] = useState("day");
+    const [labels, setLabels] = useState([]);
     
     const handleAPI = (id) => {
         setValues([]);
@@ -39,29 +40,6 @@ function LineChart(props){
         setIsLoaded(false);
     }
 
-    const getChartData = () => {
-
-        return {    
-                labels: values.map((item) => {
-                    const date = new Date(item.date);
-
-                    const time = date.toLocaleTimeString(navigator.language,
-                        {hour: '2-digit', minute:'2-digit'});
-                    var labels = [];
-                    labels.push(time);
-
-                    const day = date.toLocaleDateString(navigator.language,
-                    {day:'2-digit', month:'2-digit'});
-                    labels.push(day);
-                    
-                    if(api === "/api/week-data" && isLoaded)
-                        return labels;   
-                    else
-                        return labels[0];
-                }),    
-                datasets: getDatasets()      
-        }
-    }
     const getDatasets = () => {
         var datasets = [];
 
@@ -76,7 +54,32 @@ function LineChart(props){
             );
         }
         return datasets;
-    }   
+    }  
+
+    const formatLabels = async value => {
+
+        const date = new Date(value.date);
+
+        const time = date.toLocaleTimeString(navigator.language,
+            {hour: '2-digit', minute:'2-digit'});
+        var labels = [];
+        labels.push(time);
+
+        const day = date.toLocaleDateString(navigator.language,
+        {day:'2-digit', month:'2-digit'});
+        labels.push(day);
+        
+        if(api === "/api/week-data")
+            return Promise.resolve(labels);   
+        else
+            return Promise.resolve(labels[0]);
+      }
+
+    const getLabels = async () => {
+        return Promise.all(values
+            .map(value => formatLabels(value)));
+    }
+
     useEffect(() => {
         fetch(api)
         .then(res => res.json())
@@ -91,6 +94,15 @@ function LineChart(props){
             }
         )
       },[api]);
+
+      useEffect(() => {
+            getLabels()
+            .then(labels => {
+                console.log(labels);
+                setLabels(labels);
+            });
+      },[values]);
+
     
     if(error){
         return(
@@ -128,7 +140,8 @@ function LineChart(props){
                                     })
                                 }}
                                 >       
-                                <Line height="230px"
+                                <Line height={230}
+                                    redraw
                                     options={
                                     {  
                                         tooltips: {
@@ -163,7 +176,10 @@ function LineChart(props){
                                         }
                                     }
                                 }
-                                    data={getChartData()}
+                                    data={{
+                                        labels: labels,
+                                        datasets: getDatasets()
+                                    }}
                                 /> 
                             </LoadingOverlay>
                         </Col> 
