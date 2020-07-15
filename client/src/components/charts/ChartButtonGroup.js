@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, ButtonGroup} from 'reactstrap';
+import { Button, ButtonGroup } from 'reactstrap';
 
 function ChartButtonGroup(props){
     const [toggledButton, setToggledButton] = useState(2);
