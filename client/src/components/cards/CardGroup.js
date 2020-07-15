@@ -5,7 +5,7 @@ import StatCard from './StatCard';
 function CardArea() {
     const[values, setValues] = useState([]);
     const[isLoaded, setIsLoaded] = useState(false);
-    const [error, setError] = useState(false);
+    const[error, setError] = useState(false);
 
     const defaultText = "----";
 

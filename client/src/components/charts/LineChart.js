@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import ChartButtons from './ChartButtonGroup';
 import { Line } from 'react-chartjs-2';
 import { Spinner, Container, Row, Col } from 'reactstrap';
@@ -10,36 +10,35 @@ function LineChart(props){
     const [values, setValues] = useState([]);
     const [error, setError] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [api, setApi] = useState("/api/day-data");
+    const [api, setAPI] = useState("/api/day-data");
     const [range, setRange] = useState("day");
-    const [labels, setLabels] = useState([]);
     const [labelTimeUnit, setLabelTimeUnit] = useState("minute");
     
     const handleAPI = (id) => {
         setValues([]);
         switch(id){
             case 1:
-                setApi("/api/week-data");
+                setAPI("/api/week-data");
                 setRange("week");
                 setLabelTimeUnit("day");
                 break;
             case 3:
-                setApi("/api/12hour-data");
+                setAPI("/api/12hour-data");
                 setRange("12 hours");
                 setLabelTimeUnit("minute");
                 break;
             case 4:
-                setApi("/api/3hour-data");
+                setAPI("/api/3hour-data");
                 setRange("3 hours");
                 setLabelTimeUnit("minute");
                 break;
             case 5:
-                setApi("/api/hour-data");
+                setAPI("/api/hour-data");
                 setRange("hour");
                 setLabelTimeUnit("minute");
                 break;
             default:
-                setApi("/api/day-data");  
+                setAPI("/api/day-data");  
                 setRange("day");
                 setLabelTimeUnit("minute");      
         }
@@ -62,10 +61,9 @@ function LineChart(props){
         return datasets;
     }  
 
-
-    const getLabels = async () => {
-        return Promise.all(values
-            .map(value => value.date));
+    const getLabels = () => {
+        return values
+             .map(value => value.date);
     }
 
     useEffect(() => {
@@ -82,15 +80,7 @@ function LineChart(props){
             }
         )
       },[api]);
-
-      useEffect(() => {
-            getLabels()
-            .then(labels => {
-                setLabels(labels);
-            });
-      },[values]);
-
-    
+   
     if(error){
         return(
             <div>Error: {error.message}</div>
@@ -173,7 +163,7 @@ function LineChart(props){
                                     }
                                 }
                                     data={{
-                                        labels: labels,
+                                        labels: getLabels(),
                                         datasets: getDatasets()
                                     }}
                                 /> 
