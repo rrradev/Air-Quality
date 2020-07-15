@@ -10,7 +10,7 @@ function ChartButtonGroup(props){
         }
 
         setToggledButton(Number(id));
-        props.api(Number(id));
+        props.toggled(Number(id));
     }
 
     return(
