@@ -13,6 +13,7 @@ function LineChart(props){
     const [api, setApi] = useState("/api/day-data");
     const [range, setRange] = useState("day");
     const [labels, setLabels] = useState([]);
+    const [labelTimeUnit, setLabelTimeUnit] = useState("minute");
     
     const handleAPI = (id) => {
         setValues([]);
@@ -20,22 +21,27 @@ function LineChart(props){
             case 1:
                 setApi("/api/week-data");
                 setRange("week");
+                setLabelTimeUnit("day");
                 break;
             case 3:
                 setApi("/api/12hour-data");
                 setRange("12 hours");
+                setLabelTimeUnit("minute");
                 break;
             case 4:
                 setApi("/api/3hour-data");
                 setRange("3 hours");
+                setLabelTimeUnit("minute");
                 break;
             case 5:
                 setApi("/api/hour-data");
                 setRange("hour");
+                setLabelTimeUnit("minute");
                 break;
             default:
                 setApi("/api/day-data");  
-                setRange("day");      
+                setRange("day");
+                setLabelTimeUnit("minute");      
         }
         setIsLoaded(false);
     }
@@ -56,28 +62,10 @@ function LineChart(props){
         return datasets;
     }  
 
-    const formatLabels = async value => {
-
-        const date = new Date(value.date);
-
-        const time = date.toLocaleTimeString(navigator.language,
-            {hour: '2-digit', minute:'2-digit'});
-        var labels = [];
-        labels.push(time);
-
-        const day = date.toLocaleDateString(navigator.language,
-        {day:'2-digit', month:'2-digit'});
-        labels.push(day);
-        
-        if(api === "/api/week-data")
-            return Promise.resolve(labels);   
-        else
-            return Promise.resolve(labels[0]);
-      }
 
     const getLabels = async () => {
         return Promise.all(values
-            .map(value => formatLabels(value)));
+            .map(value => value.date));
     }
 
     useEffect(() => {
@@ -98,7 +86,6 @@ function LineChart(props){
       useEffect(() => {
             getLabels()
             .then(labels => {
-                console.log(labels);
                 setLabels(labels);
             });
       },[values]);
@@ -156,9 +143,18 @@ function LineChart(props){
                                                     autoSkip: true,
                                                     maxTicksLimit: 7,
                                                     maxRotation: 0,
-                                                    minRotation: 0
+                                                    minRotation: 0,
+                                                },
+                                                type: "time",
+
+                                                time: {
+                                                    tooltipFormat: 'HH:mm MMM DD',
+                                                    unit: labelTimeUnit,
+                                                    displayFormats: {
+                                                        minute: "HH:mm",
+                                                    },
                                                 }
-                                            }],
+                                            },],
                                             yAxes:[{
                                                 ticks:{
                                                     display: true,
