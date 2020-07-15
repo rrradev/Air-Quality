@@ -14,7 +14,7 @@ function LineChart(props){
     const [range, setRange] = useState("day");
     const [labelTimeUnit, setLabelTimeUnit] = useState("minute");
     
-    const handleAPI = (id) => {
+    const toggledButton = (id) => {
         setValues([]);
         switch(id){
             case 1:
@@ -91,15 +91,16 @@ function LineChart(props){
                 <Container className="chart-container">
                     <Row>
                         <Col>
-                            <h5 className="title">
+                            <div className="title">
                                 {props.name + 
                                 " over the last " + 
-                                range}</h5>
+                                range}
+                            </div>
                         </Col>
                     </Row>
                     <Row>
                         <Col className="buttons">
-                            <ChartButtons api={handleAPI} /> 
+                            <ChartButtons toggled={toggledButton} /> 
                         </Col>
                     </Row>
                     <Row>
