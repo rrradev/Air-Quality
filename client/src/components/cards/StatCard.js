@@ -20,7 +20,7 @@ function StatCard(props) {
                     <div style={{
                         textAlign: "right"
                     }}>
-                        <img src={props.imgURL} className="image" />
+                        <img src={props.imgURL} className="image" alt="" />
 
                     </div>
                 </Col>
