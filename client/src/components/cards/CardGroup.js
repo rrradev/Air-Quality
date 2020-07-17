@@ -21,7 +21,7 @@ function CardArea() {
                 setError(error);
             }
         )
-      });
+      },[]);
     
     if(!error){
         return(
