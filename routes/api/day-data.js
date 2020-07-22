@@ -13,8 +13,7 @@ router.get('/', (req, res) => {
         new Date()
             .getTime() - (24 * 60 * 60 * 1000));
     Data
-    .find({ "date": { "$gte": pastDay } })
-    .sort({date: 1})
+    .find({ "date": { "$gte": pastDay }})
     .then(data => res.json(data));
 });
 
