@@ -54,7 +54,8 @@ function LineChart(props){
                     label: props.datasets[i].label,
                     backgroundColor: props.datasets[i].color,
                     data: values.map(item => item[props.datasets[i].id]),
-                    pointRadius: 0
+                    pointRadius: 0,
+                    hidden: !isLoaded
                 }
             );
         }
@@ -132,12 +133,12 @@ function LineChart(props){
                                                 ticks:{
                                                     display: true,
                                                     autoSkip: true,
-                                                    maxTicksLimit: 7,
+                                                    maxTicksLimit: 6,
                                                     maxRotation: 0,
                                                     minRotation: 0,
                                                 },
                                                 type: "time",
-
+                                                distribution: 'series',
                                                 time: {
                                                     tooltipFormat: 'HH:mm MMM DD',
                                                     unit: labelTimeUnit,

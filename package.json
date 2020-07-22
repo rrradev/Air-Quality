@@ -1,5 +1,5 @@
 {
-  "name": "homeserver",
+  "name": "airqt",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -13,18 +13,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/radradef/homeserver.git"
+    "url": "git+https://github.com/radradef/Air-Quality.git"
   },
   "author": "rradev",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/radradef/homeserver/issues"
+    "url": "https://github.com/radradef/Air-Quality/issues"
   },
-  "homepage": "https://github.com/radradef/homeserver#readme",
+  "homepage": "https://github.com/radradef/Air-Quality#readme",
   "dependencies": {
     "concurrently": "^5.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.9.18"
+    "moment": "^2.27.0",
+    "mongoose": "^5.9.18",
+    "lodash": ">=4.17.19"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
