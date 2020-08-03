@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { squeeze } = require('../../lib/data_transform');
+const { squeezeInHourSegments } = require('../../lib/data_transform');
 
 //Sensor data DB model
 const Data = require('../../models/Data');
@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
             .getTime() - (7* 24 * 60 * 60 * 1000));
     Data
     .find({ "date": { "$gte": pastWeek }})
-    .then(data => squeeze(data))
+    .then(data => squeezeInHourSegments(data))
     .then(data => res.json(data));
 });
 
