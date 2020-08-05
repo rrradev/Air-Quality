@@ -14,9 +14,9 @@ function LineChart(props){
     const [range, setRange] = useState("day");
     const [labelTimeUnit, setLabelTimeUnit] = useState("minute");
     
-    const toggledButton = (id) => {
+    const toggledButton = (buttonId) => {
         setValues([]);
-        switch(id){
+        switch(buttonId){
             case 1:
                 setAPI("/api/week-data");
                 setRange("week");
@@ -36,6 +36,11 @@ function LineChart(props){
                 setAPI("/api/hour-data");
                 setRange("hour");
                 setLabelTimeUnit("minute");
+                break;
+            case 6:
+                setAPI("/api/month-data");
+                setRange("month");
+                setLabelTimeUnit("day");
                 break;
             default:
                 setAPI("/api/day-data");  

@@ -8,26 +8,31 @@ function ChartButtonGroup(props){
     const $12hourButtonId = "3";
     const $3hourButtonId = "4";
     const hourButtonId = "5";
-
+    const monthButtonID = "6";
 
     function handleClick(id){
         if(id === toggledButtonId){
             return;
         }
 
-        setToggledButtonId(Number(id));
+        setToggledButtonId(id);
         props.toggled(Number(id));
     }
 
     return(
         <div>
             <ButtonGroup size="sm">
-                 <Button id={weekButtonId}
+                <Button id={monthButtonID}
+                    onClick={ev => handleClick(ev.target.id)}
+                    active={(toggledButtonId === monthButtonID)}>     
+                    1m
+                </Button> 
+                <Button id={weekButtonId}
                     onClick={ev => handleClick(ev.target.id)}
                     active={(toggledButtonId === weekButtonId)}>     
                     1w
                 </Button> 
-                  <Button id={dayButtonId}
+                <Button id={dayButtonId}
                     onClick={ev => handleClick(ev.target.id)}
                     active={(toggledButtonId === dayButtonId)}>     
                     1d
