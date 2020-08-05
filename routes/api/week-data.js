@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { squeezeInHourSegments } = require('../../lib/data_transform');
+const { groupByHourAgg } = require('../../lib/db_aggregations');
 
 //Sensor data DB model
 const Data = require('../../models/Data');
@@ -12,10 +12,10 @@ router.get('/', (req, res) => {
     console.log("GET day data");
     var pastWeek = new Date(
         new Date()
-            .getTime() - (7* 24 * 60 * 60 * 1000));
+            .getTime() - (7 * 24 * 60 * 60 * 1000));
+    var agg = groupByHourAgg(pastWeek);
     Data
-    .find({ "date": { "$gte": pastWeek }})
-    .then(data => squeezeInHourSegments(data))
+    .aggregate(agg)
     .then(data => res.json(data));
 });
 
