@@ -1,43 +1,49 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 
 function ChartButtonGroup(props){
-    const [toggledButton, setToggledButton] = useState(2);
+    const [toggledButtonId, setToggledButtonId] = useState("2");
+    const weekButtonId = "1";
+    const dayButtonId = "2";
+    const $12hourButtonId = "3";
+    const $3hourButtonId = "4";
+    const hourButtonId = "5";
+
 
     function handleClick(id){
-        if(id == toggledButton){
+        if(id === toggledButtonId){
             return;
         }
 
-        setToggledButton(Number(id));
+        setToggledButtonId(Number(id));
         props.toggled(Number(id));
     }
 
     return(
         <div>
             <ButtonGroup size="sm">
-                 <Button id="1"
+                 <Button id={weekButtonId}
                     onClick={ev => handleClick(ev.target.id)}
-                    active={(toggledButton === 1)}>     
+                    active={(toggledButtonId === weekButtonId)}>     
                     1w
                 </Button> 
-                  <Button id="2"
+                  <Button id={dayButtonId}
                     onClick={ev => handleClick(ev.target.id)}
-                    active={(toggledButton === 2)}>     
+                    active={(toggledButtonId === dayButtonId)}>     
                     1d
                 </Button>
-                <Button id="3"
-                    active={toggledButton === 3}
+                <Button id={$12hourButtonId}
+                    active={toggledButtonId === $12hourButtonId}
                     onClick={ev => handleClick(ev.target.id)}>
                     12h
                 </Button>
-                <Button id="4"
-                    active={toggledButton === 4}
+                <Button id={$3hourButtonId}
+                    active={toggledButtonId === $3hourButtonId}
                     onClick={ev => handleClick(ev.target.id)}>
                     3h
                 </Button>
-                <Button id="5"
-                    active={toggledButton === 5}
+                <Button id={hourButtonId}
+                    active={toggledButtonId === hourButtonId}
                     onClick={ev => handleClick(ev.target.id)}>
                     1h
                 </Button>
