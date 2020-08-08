@@ -16,7 +16,7 @@ function CardArea() {
             (values) => {
                 setValues(values);
                 setIsLoaded(true);
-        },
+            },
             (error) => {
                 setError(error);
             }
