@@ -5,8 +5,6 @@ import { Spinner, Container, Row, Col } from 'reactstrap';
 import LoadingOverlay from 'react-loading-overlay';
 import './LineChart.css';
 
-var abortController = new AbortController();
-
 function LineChart(props){ 
 
     const [values, setValues] = useState([]);
@@ -15,6 +13,8 @@ function LineChart(props){
     const [api, setAPI] = useState("/api/day-data");
     const [range, setRange] = useState("day");
     const [labelTimeUnit, setLabelTimeUnit] = useState("minute");
+
+    var abortController = new AbortController();
     
     const toggledButton = (buttonId) => {
         setValues([]);
