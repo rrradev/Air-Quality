@@ -5,6 +5,8 @@ import { Spinner, Container, Row, Col } from 'reactstrap';
 import LoadingOverlay from 'react-loading-overlay';
 import './LineChart.css';
 
+var abortController = new AbortController();
+
 function LineChart(props){ 
 
     const [values, setValues] = useState([]);
@@ -48,6 +50,8 @@ function LineChart(props){
                 setLabelTimeUnit("minute");      
         }
         setIsLoaded(false);
+        abortController.abort();
+        abortController = new AbortController();
     }
 
     const getDatasets = () => {
@@ -73,18 +77,22 @@ function LineChart(props){
     }
 
     useEffect(() => {
-        fetch(api)
+        fetch(api, { signal: abortController.signal })
         .then(res => res.json())
         .then(
             (values) => {
                 setValues(values);
                 setIsLoaded(true);
-        },
+            },
             (error) => {
-                setError(error);
-                setIsLoaded(true);
+                if(error.name === "AbortError"){
+                    return;
+                } else {
+                    setError(error);
+                    setIsLoaded(true);
+                }
             }
-        )
+        );
       },[api]);
    
     if(error){
@@ -163,7 +171,7 @@ function LineChart(props){
                                             }],
                                         },
                                         animation: {
-                                            duration: 500,
+                                            duration: 250,
                                             numSteps: 7,
                                             easing: "easeOutQuart"
                                         }
