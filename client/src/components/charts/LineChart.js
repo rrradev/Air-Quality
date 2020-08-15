@@ -7,9 +7,6 @@ import './LineChart.css';
 
 function LineChart(props){ 
 
-    const [values, setValues] = useState([]);
-    const [error, setError] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
     const [api, setAPI] = useState("/api/day-data");
     const [range, setRange] = useState("day");
     const [labelTimeUnit, setLabelTimeUnit] = useState("minute");
@@ -17,7 +14,6 @@ function LineChart(props){
     var abortController = new AbortController();
     
     const toggledButton = (buttonId) => {
-        setValues([]);
         switch(buttonId){
             case 1:
                 setAPI("/api/week-data");
@@ -54,35 +50,24 @@ function LineChart(props){
         abortController = new AbortController();
     }
 
-    const getDatasets = () => {
-        var datasets = [];
-
-        for(let i = 0; i < props.datasets.length; i++){
-            datasets.push(
-                {  
-                    label: props.datasets[i].label,
-                    backgroundColor: props.datasets[i].color,
-                    data: values.map(item => item[props.datasets[i].id]),
-                    pointRadius: 0,
-                    hidden: !isLoaded
-                }
-            );
-        }
-        return datasets;
-    }  
-
-    const getLabels = () => {
-        return values
-             .map(value => value.date);
-    }
-
+    const [error, setError] = useState(false);
+    const [chartData, updateChartData] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
         fetch(api, { signal: abortController.signal })
         .then(res => res.json())
         .then(
             (values) => {
-                setValues(values);
-                setIsLoaded(true);
+                if(window.Worker){
+                    const worker = new Worker('./webWorkers/chartWorker.js');
+                    worker.postMessage({values, props});
+    
+                    worker.onmessage = (ev) => {
+                        updateChartData(ev.data);
+                        worker.terminate();
+                        setIsLoaded(true);
+                    }
+                }                        
             },
             (error) => {
                 if(error.name === "AbortError"){
@@ -135,51 +120,52 @@ function LineChart(props){
                                 <Line height={230}
                                     redraw
                                     options={
-                                    {  
-                                        tooltips: {
-                                            intersect: false,
-                                        },
-                                        responsive: true,
-                                        maintainAspectRatio: false,
-                                        scales: {
-                                            xAxes:[{
-                                                ticks:{
-                                                    display: true,
-                                                    autoSkip: true,
-                                                    maxTicksLimit: 6,
-                                                    maxRotation: 0,
-                                                    minRotation: 0,
-                                                },
-                                                type: "time",
-                                                distribution: 'series',
-                                                time: {
-                                                    tooltipFormat: 'HH:mm MMM DD',
-                                                    unit: labelTimeUnit,
-                                                    displayFormats: {
-                                                        minute: "HH:mm",
+                                        {                     
+                                            tooltips: {
+                                                intersect: false,
+                                            },
+                                            responsive: true,
+                                            maintainAspectRatio: false,
+                                            scales: {
+                                                xAxes:[{
+                                                    ticks:{
+                                                        display: true,
+                                                        autoSkip: true,
+                                                        maxTicksLimit: 6,
+                                                        maxRotation: 0,
+                                                        minRotation: 0,
                                                     },
-                                                }
-                                            },],
-                                            yAxes:[{
-                                                ticks:{
-                                                    display: true,
-                                                    autoSkip: true,
-                                                    maxTicksLimit: 7,
-                                                    maxRotation: 0,
-                                                    minRotation: 0
-                                                }
-                                            }],
-                                        },
-                                        animation: {
-                                            duration: 250,
-                                            numSteps: 7,
-                                            easing: "easeOutQuart"
+                                                    type: "time",
+                                                    distribution: 'series',
+                                                    time: {
+                                                        tooltipFormat: 'HH:mm MMM DD',
+                                                        unit: labelTimeUnit,
+                                                        displayFormats: {
+                                                            minute: "HH:mm",
+                                                        },
+                                                    }
+                                                },],
+                                                yAxes:[{
+                                                    ticks:{
+                                                        display: true,
+                                                        autoSkip: true,
+                                                        maxTicksLimit: 7,
+                                                        maxRotation: 0,
+                                                        minRotation: 0
+                                                    }
+                                                }],
+                                            },
+                                            animation: {
+                                                duration: 200,
+                                                numSteps: 7,
+                                                easing: "easeOutQuart"
+                                            }
                                         }
                                     }
-                                }
-                                    data={{
-                                        labels: getLabels(),
-                                        datasets: getDatasets()
+                                    data={isLoaded? chartData : {
+                                        datasets:[
+                                            { label: "Loading..." }
+                                        ]
                                     }}
                                 /> 
                             </LoadingOverlay>
