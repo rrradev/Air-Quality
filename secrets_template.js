@@ -1,16 +1,14 @@
-
 const DBsecrets = {
-    username: "",
-    password: "",
-    name: ""
+    mongoURI : ""
 }
+
 const Auth = {
     token: ""
 }
 
 module.exports = {
-    requestDB: (secret) => {
-        return DBsecrets[secret];
+    requestMongoURI: () => {
+        return DBsecrets.mongoURI;
     },
     requestToken: () => {
         return Auth.token;

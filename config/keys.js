@@ -1,4 +1,3 @@
-
     var mongoURI, auth_token;
 
     if(process.env.NODE_ENV ==='production'){
@@ -7,10 +6,7 @@
     } else {
         const secrets = require('../secrets');
         
-        mongoURI = 'mongodb+srv://' + secrets.requestDB(`username`) + ':' +
-        secrets.requestDB('password') + '@homeserver-ayepl.mongodb.net/' + 
-        secrets.requestDB('name') + '?retryWrites=true&w=majority';
-
+        mongoURI = secrets.requestMongoURI();
         auth_token = secrets.requestToken();
     }
 module.exports = {

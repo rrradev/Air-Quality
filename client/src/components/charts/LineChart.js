@@ -12,6 +12,7 @@ function LineChart(props){
     const [labelTimeUnit, setLabelTimeUnit] = useState("minute");
 
     var abortController = new AbortController();
+    var worker = new Worker('./webWorkers/chartWorker.js');
     
     const toggledButton = (buttonId) => {
         switch(buttonId){
@@ -48,6 +49,8 @@ function LineChart(props){
         setIsLoaded(false);
         abortController.abort();
         abortController = new AbortController();
+        worker.terminate();
+        worker = new Worker('./webWorkers/chartWorker.js');
     }
 
     const [error, setError] = useState(false);
@@ -59,10 +62,10 @@ function LineChart(props){
         .then(
             (values) => {
                 if(window.Worker){
-                    const worker = new Worker('./webWorkers/chartWorker.js');
+                    
                     worker.postMessage({values, props});
-    
-                    worker.onmessage = (ev) => {
+
+                    worker.onmessage = (ev) => {          
                         updateChartData(ev.data);
                         worker.terminate();
                         setIsLoaded(true);
