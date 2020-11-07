@@ -33,7 +33,7 @@ function CardArea() {
                             text={ isLoaded ? 
                                 values.pm25 + " µg/㎥" : 
                                 defaultText }
-                            imgURL="/icons/gas"/>
+                            imgURL="/icons/gas.png"/>
                     </Col>
                     <Col lg="3" sm="6">
                         <StatCard title="PM10"
@@ -41,7 +41,7 @@ function CardArea() {
                             text={ isLoaded ? 
                                 values.pm10 + " µg/㎥" : 
                                 defaultText }
-                            imgURL="/icons/gas"/>
+                            imgURL="/icons/gas.png"/>
                     </Col>
                     <Col lg="3" sm="6">
                         <StatCard title="Temperature"
@@ -49,7 +49,7 @@ function CardArea() {
                             text={ isLoaded ? 
                                 values.temp + " °C" : 
                                 defaultText }
-                            imgURL="/icons/termometer"/>
+                            imgURL="/icons/termometer.png"/>
                     </Col>
                     <Col lg="3" sm="6">
                         <StatCard title="Humidity"
@@ -57,7 +57,7 @@ function CardArea() {
                             text={ isLoaded ? 
                                 values.hum + " %" : 
                                 defaultText }
-                            imgURL="/icons/humidity"/>
+                            imgURL="/icons/humidity.png"/>
                     </Col>
                 </Row>
             </Container>
