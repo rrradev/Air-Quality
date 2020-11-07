@@ -9,7 +9,6 @@ const dayData = require('./routes/api/day-data');
 const weekData = require('./routes/api/week-data');
 const monthData = require('./routes/api/month-data');
 const lastRecord = require('./routes/api/last-record');
-const icons = require('./routes/images/card-icons');
 const path = require('path');
 
 const app = express();
@@ -34,9 +33,6 @@ app.use('/api/12hour-data', $12hourData);
 app.use('/api/day-data', dayData);
 app.use('/api/week-data', weekData);
 app.use('/api/month-data', monthData);
-
-// Images
-app.use('/icons', icons);
 
 if(process.env.NODE_ENV ==='production'){
     app.use(express.static('client/build'));
