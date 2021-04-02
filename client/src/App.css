@@ -1,3 +1,10 @@
 .app {
-    background-image: url("pixels.jpg");
+    background-image: url("pixels.jpg");   
 }
+
+:root {
+    touch-action: pan-x pan-y;
+    background-image: url("pixels.jpg");
+    height: 100%;
+  }
+
