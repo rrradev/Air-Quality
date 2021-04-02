@@ -21,7 +21,7 @@ const NavBar = (props) => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
           </Nav>
-          <NavLink href="https://github.com/radradef/Air-Quality">GitHub</NavLink>
+          <NavLink href="https://github.com/radradef">GitHub</NavLink>
         </Collapse>
       </Navbar>
     </div>
