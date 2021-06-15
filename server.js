@@ -35,8 +35,15 @@ app.use('/api/week-data', weekData);
 app.use('/api/month-data', monthData);
 
 if(process.env.NODE_ENV ==='production'){
+    app.use((req, res, next) => {
+      if (req.header('x-forwarded-proto') !== 'https') {
+        res.redirect(`https://${req.header('host')}${req.url}`)
+      } else {
+        next();
+      }
+    });
     app.use(express.static('client/build'));
-    app.get('*', (req, res) =>{
+    app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     });
 }
