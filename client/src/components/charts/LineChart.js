@@ -5,7 +5,7 @@ import { Spinner, Container, Row, Col } from 'reactstrap';
 import LoadingOverlay from 'react-loading-overlay';
 import './LineChart.css';
 
-function LineChart(props){ 
+function LineChart(props) {
 
     const [api, setAPI] = useState("/api/day-data");
     const [range, setRange] = useState("day");
@@ -13,9 +13,9 @@ function LineChart(props){
 
     var abortController = new AbortController();
     var worker;
-    
+
     const toggledButton = (buttonId) => {
-        switch(buttonId){
+        switch (buttonId) {
             case 1:
                 setAPI("/api/week-data");
                 setRange("week");
@@ -42,15 +42,15 @@ function LineChart(props){
                 setLabelTimeUnit("day");
                 break;
             default:
-                setAPI("/api/day-data");  
+                setAPI("/api/day-data");
                 setRange("day");
-                setLabelTimeUnit("minute");      
+                setLabelTimeUnit("minute");
         }
         setIsLoaded(false);
         abortController.abort();
         abortController = new AbortController();
 
-        if(worker) {
+        if (worker) {
             worker.terminate();
         }
     }
@@ -60,44 +60,44 @@ function LineChart(props){
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
         fetch(api, { signal: abortController.signal })
-        .then(res => res.json())
-        .then(
-            (values) => {
-                if(window.Worker){
-                    worker = new Worker('./webWorkers/chartWorker.js');
-                    worker.postMessage({values, props});
+            .then(res => res.json())
+            .then(
+                (values) => {
+                    if (window.Worker) {
+                        worker = new Worker('./webWorkers/chartWorker.js');
+                        worker.postMessage({ values, props });
 
-                    worker.onmessage = (ev) => {          
-                        updateChartData(ev.data);
-                        worker.terminate();
+                        worker.onmessage = (ev) => {
+                            updateChartData(ev.data);
+                            worker.terminate();
+                            setIsLoaded(true);
+                        }
+
+                        worker.onerror = () => {
+                            worker.terminate();
+                        }
+                    }
+                },
+                (error) => {
+                    if (error.name === "AbortError") {
+                        return;
+                    } else {
+                        setError(error);
                         setIsLoaded(true);
                     }
-
-                    worker.onerror = () => {
-                        worker.terminate();
-                    }
-                }                        
-            },
-            (error) => {
-                if(error.name === "AbortError"){
-                    return;
-                } else {
-                    setError(error);
-                    setIsLoaded(true);
                 }
-            }
-        );
-      },[api]);
-   
-    if(error){
-        return(
+            );
+    }, [api]);
+
+    if (error) {
+        return (
             <div>Error: {error.message}</div>
         );
     } else {
-        return(
+        return (
             <Container>  {/* ;( */}
                 <Container className="chart-container">
-                    
+
                     <Row>
                         <Col>
                             <div className="title">
@@ -109,12 +109,12 @@ function LineChart(props){
                     </Row>
                     <Row>
                         <Col className="buttons">
-                            <ChartButtons toggled={toggledButton} /> 
+                            <ChartButtons toggled={toggledButton} />
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <LoadingOverlay 
+                            <LoadingOverlay
                                 active={!isLoaded}
                                 fadeSpeed={0}
                                 spinner={
@@ -122,23 +122,23 @@ function LineChart(props){
                                 }
                                 styles={{
                                     overlay: (base) => ({
-                                    ...base,
-                                    background: "rgba(255,255,255,0)"
+                                        ...base,
+                                        background: "rgba(255,255,255,0)"
                                     })
                                 }}
-                                >       
+                            >
                                 <Line height={230}
-                                    redraw = {false}
+                                    redraw={false}
                                     options={
-                                        {                     
+                                        {
                                             tooltips: {
                                                 intersect: false,
                                             },
                                             responsive: true,
                                             maintainAspectRatio: false,
                                             scales: {
-                                                xAxes:[{
-                                                    ticks:{
+                                                xAxes: [{
+                                                    ticks: {
                                                         display: true,
                                                         autoSkip: true,
                                                         maxTicksLimit: 6,
@@ -155,8 +155,8 @@ function LineChart(props){
                                                         },
                                                     }
                                                 },],
-                                                yAxes:[{
-                                                    ticks:{
+                                                yAxes: [{
+                                                    ticks: {
                                                         display: true,
                                                         autoSkip: true,
                                                         maxTicksLimit: 7,
@@ -166,22 +166,22 @@ function LineChart(props){
                                                 }],
                                             },
                                             animation: {
-                                                duration: 200,
+                                                duration: 420,
                                                 numSteps: 7,
                                                 easing: "easeOutQuart"
                                             }
                                         }
                                     }
-                                    data={isLoaded? chartData : {
-                                        datasets:[
+                                    data={isLoaded ? chartData : {
+                                        datasets: [
                                             { label: "Loading..." }
                                         ]
                                     }}
-                                /> 
+                                />
                             </LoadingOverlay>
-                        </Col> 
+                        </Col>
                     </Row>
-                </Container>  
+                </Container>
             </Container>
         );
     }
