@@ -15,7 +15,7 @@ const NotFound = () => {
                         width: "50%"
                     }}
                 /> 
-                <div className="error-message"
+                <div className="title-text"
                     style={{
                         marginTop: "1.5rem"
                     }}

@@ -8,12 +8,12 @@ function ChartGroup(){
                 datasets={[
                     {
                         id: "pm25",
-                        color: "rgba(145, 61, 136, 1)",
+                        color: "rgb(129, 31, 119)",
                         label: "PM25 µg/㎥"        
                     },
                     {
                         id: "pm10",
-                        color: "rgba(30, 130, 76, 1)",
+                        color: "rgb(24, 117, 68)",
                         label: "PM10 µg/㎥"           
                     }
                 ]}
@@ -22,7 +22,7 @@ function ChartGroup(){
                 datasets={[
                     {
                         id: "temp",
-                        color: "rgba(192, 57, 43, 1)",
+                        color: "rgb(158, 46, 34)",
                         label: "Temperature °C"        
                     }
                 ]}
@@ -31,7 +31,7 @@ function ChartGroup(){
                 datasets={[
                     {
                         id: "hum",
-                        color: "rgba(75, 119, 190, 1)",
+                        color: "rgb(54, 95, 161)",
                         label: "Humidity %"
                     }
                 ]}
