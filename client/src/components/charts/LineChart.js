@@ -12,7 +12,7 @@ function LineChart(props){
     const [labelTimeUnit, setLabelTimeUnit] = useState("minute");
 
     var abortController = new AbortController();
-    var worker = new Worker('./webWorkers/chartWorker.js');
+    var worker;
     
     const toggledButton = (buttonId) => {
         switch(buttonId){
@@ -49,8 +49,10 @@ function LineChart(props){
         setIsLoaded(false);
         abortController.abort();
         abortController = new AbortController();
-        worker.terminate();
-        worker = new Worker('./webWorkers/chartWorker.js');
+
+        if(worker) {
+            worker.terminate();
+        }
     }
 
     const [error, setError] = useState(false);
@@ -62,13 +64,17 @@ function LineChart(props){
         .then(
             (values) => {
                 if(window.Worker){
-                    
+                    worker = new Worker('./webWorkers/chartWorker.js');
                     worker.postMessage({values, props});
 
                     worker.onmessage = (ev) => {          
                         updateChartData(ev.data);
                         worker.terminate();
                         setIsLoaded(true);
+                    }
+
+                    worker.onerror = () => {
+                        worker.terminate();
                     }
                 }                        
             },
@@ -91,12 +97,13 @@ function LineChart(props){
         return(
             <Container>  {/* ;( */}
                 <Container className="chart-container">
+                    
                     <Row>
                         <Col>
                             <div className="title">
-                                {props.name + 
-                                " over the last " + 
-                                range}
+                                <div className="title-text">
+                                    {props.name + " over the last " + range}
+                                </div>
                             </div>
                         </Col>
                     </Row>
@@ -116,12 +123,12 @@ function LineChart(props){
                                 styles={{
                                     overlay: (base) => ({
                                     ...base,
-                                    background: "rgba(255,255,255,0.5)"
+                                    background: "rgba(255,255,255,0)"
                                     })
                                 }}
                                 >       
                                 <Line height={230}
-                                    redraw
+                                    redraw = {false}
                                     options={
                                         {                     
                                             tooltips: {
