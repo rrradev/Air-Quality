@@ -1,23 +1,23 @@
 #pm25 {
-    background-color:  rgba(145, 61, 136, 1);
+    background-color:  rgb(129, 31, 119);
 }
 
 #pm10 {
-    background-color: rgba(30, 130, 76, 1);
+    background-color: rgb(24, 117, 68);
 }
 
 #temp {
-    background-color: rgba(192, 57, 43, 1);
+    background-color: rgb(158, 46, 34);
 }
 
 #hum {
-    background-color: rgba(75, 119, 190, 1);
+    background-color: rgb(54, 95, 161);
 }
 
 .stat-card {
     margin-top: 10px;
     height: 80px;
-    box-shadow: 0px -2px 5px 0px rgba(145,145,145,1);
+    box-shadow: 0px -2px 5px 0px rgb(65, 64, 64);
     border-radius: 20px;
 }
 
