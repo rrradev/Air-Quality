@@ -5,13 +5,15 @@ import pixelsDark from './pixels_dark.png';
 export const lightTheme = {
   backgroundImage: pixels,
   chartBackgroundColor: "white",
-  titleText: "rgb(34, 30, 30)"
+  titleText: "rgb(34, 30, 30)",
+  panelColor: "#D6D6D6"
 };
 
 export const darkTheme = {
   backgroundImage: pixelsDark,
   chartBackgroundColor: "#1c252b",
-  titleText: "rgb(245, 233, 233)"
+  titleText: "rgb(245, 233, 233)",
+  panelColor: "rgb(54, 54, 73)"
 };
 
 export const GlobalStyles = createGlobalStyle`
@@ -28,5 +30,9 @@ export const GlobalStyles = createGlobalStyle`
 
   .title-text {
     color: ${(props) => props.theme.titleText}
+  }
+
+  #panel {
+    background-color: ${(props) => props.theme.panelColor}
   }
 `;

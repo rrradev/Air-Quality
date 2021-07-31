@@ -1,0 +1,17 @@
+#panel {
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0px -2px 5px 0px rgb(36, 36, 36);
+}
+
+@media screen and (min-width: 601px) {
+    #panel {
+        width: 87%;
+    }
+  }
+
+@media screen and (max-width: 601px) {
+    .title {
+        width: 100%;
+    }
+  }

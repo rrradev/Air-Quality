@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import NavBar from './components/NavBar';
 import MainPanel from './components/MainPanel';
 import NotFound from './components/NotFound';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -35,9 +34,8 @@ const App = () => {
         <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
             <GlobalStyles />
             <Router>
-                <NavBar isBulbOn={themeToggler} />
                 <Switch>
-                    <Route path="/" exact component={MainPanel} />
+                    <Route exact path="/" render={(props) => <MainPanel {...props} themeToggler={themeToggler} />} />
                     <Route component={NotFound} />
                 </Switch>
             </Router>
