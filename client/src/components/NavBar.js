@@ -45,7 +45,11 @@ const NavBar = (props) => {
 
   return (
     <div>
-      <Navbar color="dark" dark expand="sm">
+      <Navbar color="dark" dark expand="sm"
+        style={{
+          borderBottom: "2px solid"
+        }}
+      >
         <NavbarBrand href="/">Air Quality</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
