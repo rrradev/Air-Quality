@@ -11,6 +11,12 @@ function LineChart(props) {
     const [range, setRange] = useState("day");
     const [labelTimeUnit, setLabelTimeUnit] = useState("minute");
 
+    const gridLines = {
+        display: true,
+        color: 'grey',
+        lineWidth: 0.5
+    }
+
     var abortController = new AbortController();
     var worker;
 
@@ -123,7 +129,7 @@ function LineChart(props) {
                                 styles={{
                                     overlay: (base) => ({
                                         ...base,
-                                        background: "rgba(255,255,255,0)"
+                                        backgroundColor: "rgba(255,255,255,0)",
                                     })
                                 }}
                             >
@@ -141,9 +147,9 @@ function LineChart(props) {
                                                     ticks: {
                                                         display: true,
                                                         autoSkip: true,
-                                                        maxTicksLimit: 6,
-                                                        maxRotation: 0,
-                                                        minRotation: 0,
+                                                        maxTicksLimit: 7,
+                                                        maxRotation: 25,
+                                                        minRotation: 25,
                                                     },
                                                     type: "time",
                                                     distribution: 'series',
@@ -153,8 +159,9 @@ function LineChart(props) {
                                                         displayFormats: {
                                                             minute: "HH:mm",
                                                         },
-                                                    }
-                                                },],
+                                                    },
+                                                    gridLines
+                                                }],
                                                 yAxes: [{
                                                     ticks: {
                                                         display: true,
@@ -162,7 +169,8 @@ function LineChart(props) {
                                                         maxTicksLimit: 7,
                                                         maxRotation: 0,
                                                         minRotation: 0
-                                                    }
+                                                    },
+                                                    gridLines
                                                 }],
                                             },
                                             animation: {
@@ -173,6 +181,7 @@ function LineChart(props) {
                                         }
                                     }
                                     data={isLoaded ? chartData : {
+                                        labels: [],
                                         datasets: [
                                             { label: "Loading..." }
                                         ]

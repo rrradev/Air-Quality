@@ -5,15 +5,17 @@ import pixelsDark from './pixels_dark.png';
 export const lightTheme = {
   backgroundImage: pixels,
   chartBackgroundColor: "white",
-  titleText: "rgb(34, 30, 30)",
-  panelColor: "#D6D6D6"
+  text: "rgb(34, 30, 78)",
+  panelColor: "#D9D3DA",
+  shadows: "2px 4px 4px 0px rgb(60, 60, 60)"
 };
 
 export const darkTheme = {
   backgroundImage: pixelsDark,
   chartBackgroundColor: "#1c252b",
-  titleText: "rgb(245, 233, 233)",
-  panelColor: "rgb(54, 54, 73)"
+  text: "rgb(200, 200, 200)",
+  panelColor: "rgb(54, 54, 73)",
+  shadows: "0px 0px 0px 0px"
 };
 
 export const GlobalStyles = createGlobalStyle`
@@ -23,13 +25,18 @@ export const GlobalStyles = createGlobalStyle`
 
   .chart-container {
     margin-top: 10px;
-    box-shadow: 0px -2px 5px 0px rgb(56, 52, 52);
+    box-shadow: ${(props) => props.theme.shadows};
     background-color: ${(props) => props.theme.chartBackgroundColor};
     height: 300px;
+    border-radius: 35px;
+  }
+
+  .stat-card {
+    box-shadow: ${(props) => props.theme.shadows};
   }
 
   .title-text {
-    color: ${(props) => props.theme.titleText}
+    color: ${(props) => props.theme.text}
   }
 
   #panel {

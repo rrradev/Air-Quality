@@ -1,20 +1,26 @@
 @media screen and (min-width: 601px) {
     .title {
-        text-align: center;
-        font-size: 20px;
-        margin-top: 5px;
+      font-size: 20px;
     }
   }
 
 @media screen and (max-width: 601px) {
     .title {
-        text-align: center;
-        font-size: 16px;
-        margin-top: 5px;
+      font-size: 16px;
     }
   }
 
-.buttons {
-    margin-left: 25px;
+  @media screen and (max-width: 328px) {
+    .title {
+      font-size: 12px;
+    }
+  }
+
+.title{
+  text-align: center;
+  margin-top: 5px;
 }
 
+.buttons {
+  margin-left: 10px;
+}
