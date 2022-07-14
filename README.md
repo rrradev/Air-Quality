@@ -3,5 +3,9 @@ Web app that collects air quality metrics from a [sensor node](https://github.co
 
 Deployed on heroku: https://airqt.herokuapp.com/
 
+![ScreenL](https://user-images.githubusercontent.com/25829240/178979923-c9cccfb7-52bf-40b9-b5e4-313d82b194f1.png)
 
-![Screenshot (7)](https://user-images.githubusercontent.com/25829240/178852091-bd524561-27a7-449e-aa96-bc9fbc6bfaf1.png)
+
+
+
+
