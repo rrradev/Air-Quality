@@ -9,8 +9,16 @@ const Data = require('../../models/Data');
 // @desc    Post data to db
 // @acc     Private
 router.post('/', auth, (req, res) => {
-    console.log('POST post');
+    console.log('POST ' + JSON.stringify(req.body));
+
     const {pm25, pm10, temp, hum} = req.body;
+
+    if(!+pm25 || !+pm10 || !+temp || !+hum) {
+        res.status(400).json(req.body);
+        console.log("Invalid data");
+        
+        return;
+    }
 
     const newData = new Data({
         pm25,
@@ -19,8 +27,9 @@ router.post('/', auth, (req, res) => {
         hum,
         date: Date.now()
     });
+
      newData.save()
-     .then(data => res.json(data));
+     .then(data => res.status(201).json(data));
 });
 
 module.exports = router;
