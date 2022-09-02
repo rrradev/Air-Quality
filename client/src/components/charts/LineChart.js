@@ -7,7 +7,7 @@ import './LineChart.css';
 
 function LineChart(props) {
 
-    const [api, setAPI] = useState("/api/day-data");
+    const [endpoint, setEndpoint] = useState("/api/data?hours=24");
     const [range, setRange] = useState("day");
     const [labelTimeUnit, setLabelTimeUnit] = useState("minute");
 
@@ -23,32 +23,32 @@ function LineChart(props) {
     const toggledButton = (buttonId) => {
         switch (buttonId) {
             case 1:
-                setAPI("/api/week-data");
+                setEndpoint("/api/data?days=7&groupByHour=true");
                 setRange("week");
                 setLabelTimeUnit("day");
                 break;
             case 3:
-                setAPI("/api/12hour-data");
+                setEndpoint("/api/data?hours=12");
                 setRange("12 hours");
                 setLabelTimeUnit("minute");
                 break;
             case 4:
-                setAPI("/api/3hour-data");
+                setEndpoint("/api/data?hours=3");
                 setRange("3 hours");
                 setLabelTimeUnit("minute");
                 break;
             case 5:
-                setAPI("/api/hour-data");
+                setEndpoint("/api/data?hours=1");
                 setRange("hour");
                 setLabelTimeUnit("minute");
                 break;
             case 6:
-                setAPI("/api/month-data");
+                setEndpoint("/api/data?days=30&groupByHour=true");
                 setRange("month");
                 setLabelTimeUnit("day");
                 break;
             default:
-                setAPI("/api/day-data");
+                setEndpoint("/api/data?hours=24");
                 setRange("day");
                 setLabelTimeUnit("minute");
         }
@@ -65,7 +65,7 @@ function LineChart(props) {
     const [chartData, updateChartData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
-        fetch(api, { signal: abortController.signal })
+        fetch(endpoint, { signal: abortController.signal })
             .then(res => res.json())
             .then(
                 (values) => {
@@ -93,7 +93,7 @@ function LineChart(props) {
                     }
                 }
             );
-    }, [api]);
+    }, [endpoint]);
 
     if (error) {
         return (

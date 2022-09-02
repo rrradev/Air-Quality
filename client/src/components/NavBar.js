@@ -61,6 +61,7 @@ const NavBar = (props) => {
             alt=""
             style={
               {
+                cursor: "pointer",
                 width: "2.1rem",
                 marginRight: "1rem"
               }
