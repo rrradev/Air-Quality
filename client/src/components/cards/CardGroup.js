@@ -10,7 +10,7 @@ function CardArea() {
     const defaultText = "----";
 
     useEffect(() => {
-        fetch("/api/last-record")
+        fetch("/api/data")
             .then(res => res.json())
             .then(
                 (values) => {
