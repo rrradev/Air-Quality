@@ -4,9 +4,26 @@ const db = require('./config/keys').mongoURI;
 const data = require('./routes/api/data');
 const path = require('path');
 const fs = require('fs');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 const app = express();
 const port = process.env.PORT || 3334;
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: 'AirQt data API',
+      description: 'Managing the data measured by the air quality sensors',
+      contact: {
+        email: 'rradev@duck.com'
+      },
+      servers: ["http://localhost:3334"]
+    },
+    openapi: "3.0.0",
+  },
+  apis: ['routes/api/*.js']
+}
 
 app.use(express.json());
 
@@ -17,7 +34,7 @@ mongoose
   })
   .then(() => console.log("MongoDB connected!"))
   .catch(err => console.log(err));
-
+  
 // API
 app.use('/api/data', data);
 
@@ -35,6 +52,9 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
 }
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 const banner = fs.readFileSync(__dirname + "/banner.txt");
 
