@@ -68,7 +68,7 @@ const NavBar = (props) => {
             }
           />
 
-          <a href="https://github.com/radradef/Air-Quality">
+          <a href="https://github.com/rrradev/Air-Quality">
             <div>GitHub</div>
           </a>
 
