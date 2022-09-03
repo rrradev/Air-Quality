@@ -2,20 +2,103 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const { groupByHourPipeline } = require('../../lib/db_pipelines');
-
-//Sensor data DB model
 const Data = require('../../models/Data');
 
-// @route   POST /api/data
-// @desc    Post data to db
-// @acc     Private
+/**
+ * @swagger
+ * components:
+ *  securitySchemes:
+ *   ApiKeyAuth:
+ *    type: apiKey
+ *    in: header  
+ *    name: x-auth-token
+ * 
+ * security:
+ *  - ApiKeyAuth: []  
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Data:
+ *       type: object
+ *       required:
+ *         - pm25
+ *         - pm10
+ *         - temp
+ *         - hum
+ *       properties:
+ *         _id:
+ *           type: String
+ *           description: Auto-generated id of the sensor data enrty
+ *         pm25:
+ *           type: Number
+ *           description: Particulate Matter - 2.5 micrometers and smaller.
+ *         pm10:
+ *           type: Number
+ *           description: Particulate Matter - 10 micrometers and smaller.
+ *         temp: 
+ *           type: Number
+ *           description: Temperature, C
+ *         hum:
+ *           type: Number
+ *           description: Humidity, %
+ *         date:
+ *            type: Date
+ *            description: Auto-generated date of creation
+ *         __v:
+ *            type: Number
+ *            description: Version key
+ *       example:
+ *         _id: 63134fb957ed91027b5cc970
+ *         pm25: 5.5
+ *         pm10: 9.1
+ *         temp: 26.5
+ *         hum: 77
+ *         date: 2022-09-03T12:59:37.728Z
+ *         __v: 0
+ *     Data-Simple:
+ *       type: object
+ *       example:
+ *         pm25: 5.5
+ *         pm10: 9.1
+ *         temp: 26.5
+ *         hum: 77
+ */
+
+/** 
+ * @swagger 
+ * /api/data:
+ *   post: 
+ *     summary: Create new sensor data enrty
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Data-Simple'
+ *     security:
+ *      - ApiKeyAuth: []
+ *     responses:  
+ *       201: 
+ *         description: Created
+ *       401:
+ *         description: Unauthorized
+ */
 router.post('/', auth, (req, res) => {
     console.log('POST ' + JSON.stringify(req.body));
 
     const { pm25, pm10, temp, hum } = req.body;
 
     if (!+pm25 || !+pm10 || !+temp || !+hum) {
-        res.status(400).json(req.body);
+
+        let error = [{
+            "error": "Invalid Data."
+        }];
+
+        error.push(req.body);
+        res.status(400).json(error);
         console.log("Invalid data");
 
         return;
@@ -33,9 +116,42 @@ router.post('/', auth, (req, res) => {
         .then(data => res.status(201).json(data));
 });
 
-// @route   GET /api/data
-// @desc    Get sensor data
-// @acc     Public
+/** 
+ * @swagger 
+ * /api/data:
+ *   get: 
+ *     summary: Get sensor data
+ *     description: By default the most recent data enty is returned (1). Getting multiple entires for a given timeframe can be controled via query params
+ *     parameters:
+ *      - in: query
+ *        name: hours
+ *        schema:
+ *         type: integer
+ *         minimum: 1
+ *         maximum: 24
+ *        description: The sensor data for the past number of hours
+ *      - in: query
+ *        name: days
+ *        schema:
+ *         type: integer
+ *         minimum: 1
+ *         maximum: 10
+ *        description: The sensor data for the past number of days. Cancels hours.
+ *      - in: query
+ *        name: groupByHour 
+ *        schema:
+ *         type: boolean
+ *        description: The avarage of the sensor data grouped by hour
+ *     responses:  
+ *       200: 
+ *         description: Success
+ *         content:
+ *          application/json:
+ *           schema:
+ *            type: array
+ *            items:
+ *             $ref: '#/components/schemas/Data' 
+ */
 router.get('/', (req, res) => {
     console.log('GET /api/data');
     console.log(req.query);
@@ -49,7 +165,13 @@ router.get('/', (req, res) => {
     }
 
     let { hours, days, groupByHour } = req.query;
-    hours = +hours || 1;
+
+    if (days == 1) {
+        hours = 24;
+    } else {
+        hours = +hours || 1;
+    }
+
     days = +days || 1;
 
     if (hours < 0 || hours > 24 || days > 1) {
@@ -64,7 +186,7 @@ router.get('/', (req, res) => {
         new Date().getTime() - (days * hours * 60 * 60 * 1000)
     );
 
-    if (groupByHour == "true") {
+    if (groupByHour === "true") {
         const pipeline = groupByHourPipeline(pastDate);
         Data.aggregate(pipeline)
             .then(data => res.json(data));
