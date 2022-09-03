@@ -6,10 +6,9 @@ function CardArea() {
     const [values, setValues] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(false);
-
     const defaultText = "----";
 
-    useEffect(() => {
+    const fetchData = () => {
         fetch("/api/data")
             .then(res => res.json())
             .then(
@@ -20,7 +19,17 @@ function CardArea() {
                 (error) => {
                     setError(error);
                 }
-            )
+            );
+    }
+
+    useEffect(() => {
+        fetchData();
+
+        const interval = setInterval(() => {
+            fetchData()
+        }, 10 * 60 * 1000);
+
+        return () => clearInterval(interval);
     }, []);
 
     if (!error) {
