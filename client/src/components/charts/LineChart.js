@@ -64,35 +64,46 @@ function LineChart(props) {
     const [error, setError] = useState(false);
     const [chartData, updateChartData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    useEffect(() => {
+
+    const fetchData = () => {
         fetch(endpoint, { signal: abortController.signal })
-            .then(res => res.json())
-            .then(
-                (values) => {
-                    if (window.Worker) {
-                        worker = new Worker('./webWorkers/chartWorker.js');
-                        worker.postMessage({ values, props });
+        .then(res => res.json())
+        .then(
+            (values) => {
+                if (window.Worker) {
+                    worker = new Worker('./webWorkers/chartWorker.js');
+                    worker.postMessage({ values, props });
 
-                        worker.onmessage = (ev) => {
-                            updateChartData(ev.data);
-                            worker.terminate();
-                            setIsLoaded(true);
-                        }
-
-                        worker.onerror = () => {
-                            worker.terminate();
-                        }
-                    }
-                },
-                (error) => {
-                    if (error.name === "AbortError") {
-                        return;
-                    } else {
-                        setError(error);
+                    worker.onmessage = (ev) => {
+                        updateChartData(ev.data);
+                        worker.terminate();
                         setIsLoaded(true);
                     }
+
+                    worker.onerror = () => {
+                        worker.terminate();
+                    }
                 }
-            );
+            },
+            (error) => {
+                if (error.name === "AbortError") {
+                    return;
+                } else {
+                    setError(error);
+                    setIsLoaded(true);
+                }
+            }
+        );
+    }
+
+    useEffect(() => {
+        fetchData();
+
+        const interval = setInterval(() => {
+            fetchData()
+        }, 10 * 60 * 1000);
+
+        return () => clearInterval(interval);
     }, [endpoint]);
 
     if (error) {
