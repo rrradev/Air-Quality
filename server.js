@@ -34,7 +34,7 @@ mongoose
   })
   .then(() => console.log("MongoDB connected!"))
   .catch(err => console.log(err));
-  
+
 // API
 app.use('/api/data', data);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
@@ -56,7 +56,9 @@ if (process.env.NODE_ENV === 'production') {
 
 const banner = fs.readFileSync(__dirname + "/banner.txt");
 
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`)
+const server = app.listen(port, () => {
+  console.log(`App listening at http://localhost:${port}`);
   console.log(banner.toString());
 });
+
+module.exports = server;

@@ -1,0 +1,23 @@
+name: CI
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+jobs:
+  api-tests:
+    runs-on: macos-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: API tests
+        env:
+          NODE_ENV: production
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+        run: |
+          npm install
+          npm run test
