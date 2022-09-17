@@ -16,7 +16,7 @@ API documentation: https://airqt.herokuapp.com/api-docs
 ![ScreenL](https://user-images.githubusercontent.com/25829240/178979923-c9cccfb7-52bf-40b9-b5e4-313d82b194f1.png)
 
 ## Running the app in development mode 
- Set MongoDB URI & auth-token in secrets.js
+ Set MongoDB URI in secrets.js
 1. `npm install`
 2. `npm run client-install`
 3. `npm run dev`
