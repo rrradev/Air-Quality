@@ -9,25 +9,14 @@ const App = () => {
 
     const [theme, setTheme] = useState("light");
     const themeToggler = (isBulbOn) => {
-        let localTheme = "";
-
-        if (isBulbOn) {
-            localTheme = "light";
-        } else {
-            localTheme = "dark";
-        }
-
+        let localTheme = isBulbOn ? "light" : "dark";
         setTheme(localTheme);
         window.localStorage.setItem("theme", localTheme);
     }
 
     useEffect(() => {
         const localTheme = window.localStorage.getItem('theme');
-        if (!localTheme) {
-            setTheme("light");
-        } else {
-            setTheme(localTheme);
-        }
+        localTheme === "dark" ? setTheme("dark") : setTheme("light");
     }, []);
 
     return (
