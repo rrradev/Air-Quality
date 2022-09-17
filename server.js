@@ -59,8 +59,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 const banner = fs.readFileSync(__dirname + "/banner.txt");
 
 const server = app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
   console.log(banner.toString());
+  console.log(`Server listening at http://localhost:${port}`);
 });
 
 module.exports = server;

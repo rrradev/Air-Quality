@@ -61,150 +61,142 @@ function LineChart(props) {
         }
     }
 
-    const [error, setError] = useState(false);
     const [chartData, updateChartData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const fetchData = () => {
         fetch(endpoint, { signal: abortController.signal })
-        .then(res => res.json())
-        .then(
-            (values) => {
-                if (window.Worker) {
-                    worker = new Worker('./webWorkers/chartWorker.js');
-                    worker.postMessage({ values, props });
+            .then(res => res.json())
+            .then(
+                (values) => {
+                    if (window.Worker) {
+                        worker = new Worker('./webWorkers/chartWorker.js');
+                        worker.postMessage({ values, props });
 
-                    worker.onmessage = (ev) => {
-                        updateChartData(ev.data);
-                        worker.terminate();
+                        worker.onmessage = (ev) => {
+                            updateChartData(ev.data);
+                            worker.terminate();
+                            setIsLoaded(true);
+                        }
+
+                        worker.onerror = () => {
+                            worker.terminate();
+                        }
+                    }
+                },
+                (error) => {
+                    if (error.name === "AbortError") {
+                        return;
+                    } else {
                         setIsLoaded(true);
                     }
-
-                    worker.onerror = () => {
-                        worker.terminate();
-                    }
                 }
-            },
-            (error) => {
-                if (error.name === "AbortError") {
-                    return;
-                } else {
-                    setError(error);
-                    setIsLoaded(true);
-                }
-            }
-        );
+            );
     }
 
     useEffect(() => {
         fetchData();
 
         const interval = setInterval(() => {
-            fetchData()
+            fetchData();
         }, 10 * 60 * 1000);
 
         return () => clearInterval(interval);
     }, [endpoint]);
 
-    if (error) {
-        return (
-            <div>Error: {error.message}</div>
-        );
-    } else {
-        return (
-            <Container>  {/* ;( */}
-                <Container className="chart-container">
+    return (
+        <Container>  {/* ;( */}
+            <Container className="chart-container">
 
-                    <Row>
-                        <Col>
-                            <div className="title">
-                                <div className="title-text">
-                                    {props.name + " over the last " + range}
-                                </div>
+                <Row>
+                    <Col>
+                        <div className="title">
+                            <div className="title-text">
+                                {props.name + " over the last " + range}
                             </div>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="buttons">
-                            <ChartButtons toggled={toggledButton} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <LoadingOverlay
-                                active={!isLoaded}
-                                fadeSpeed={0}
-                                spinner={
-                                    <Spinner color="primary" />
-                                }
-                                styles={{
-                                    overlay: (base) => ({
-                                        ...base,
-                                        backgroundColor: "rgba(255,255,255,0)",
-                                    })
-                                }}
-                            >
-                                <Line height={230}
-                                    redraw={false}
-                                    options={
-                                        {
-                                            tooltips: {
-                                                intersect: false,
-                                            },
-                                            responsive: true,
-                                            maintainAspectRatio: false,
-                                            scales: {
-                                                xAxes: [{
-                                                    ticks: {
-                                                        display: true,
-                                                        autoSkip: true,
-                                                        maxTicksLimit: 7,
-                                                        maxRotation: 25,
-                                                        minRotation: 25,
+                        </div>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="buttons">
+                        <ChartButtons toggled={toggledButton} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <LoadingOverlay
+                            active={!isLoaded}
+                            fadeSpeed={0}
+                            spinner={
+                                <Spinner color="primary" />
+                            }
+                            styles={{
+                                overlay: (base) => ({
+                                    ...base,
+                                    backgroundColor: "rgba(255,255,255,0)",
+                                })
+                            }}
+                        >
+                            <Line height={230}
+                                redraw={false}
+                                options={
+                                    {
+                                        tooltips: {
+                                            intersect: false,
+                                        },
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                            xAxes: [{
+                                                ticks: {
+                                                    display: true,
+                                                    autoSkip: true,
+                                                    maxTicksLimit: 7,
+                                                    maxRotation: 25,
+                                                    minRotation: 25,
+                                                },
+                                                type: "time",
+                                                distribution: 'series',
+                                                time: {
+                                                    tooltipFormat: 'HH:mm MMM DD',
+                                                    unit: labelTimeUnit,
+                                                    displayFormats: {
+                                                        minute: "HH:mm",
                                                     },
-                                                    type: "time",
-                                                    distribution: 'series',
-                                                    time: {
-                                                        tooltipFormat: 'HH:mm MMM DD',
-                                                        unit: labelTimeUnit,
-                                                        displayFormats: {
-                                                            minute: "HH:mm",
-                                                        },
-                                                    },
-                                                    gridLines
-                                                }],
-                                                yAxes: [{
-                                                    ticks: {
-                                                        display: true,
-                                                        autoSkip: true,
-                                                        maxTicksLimit: 7,
-                                                        maxRotation: 0,
-                                                        minRotation: 0
-                                                    },
-                                                    gridLines
-                                                }],
-                                            },
-                                            animation: {
-                                                duration: 420,
-                                                numSteps: 7,
-                                                easing: "easeOutQuart"
-                                            }
+                                                },
+                                                gridLines
+                                            }],
+                                            yAxes: [{
+                                                ticks: {
+                                                    display: true,
+                                                    autoSkip: true,
+                                                    maxTicksLimit: 7,
+                                                    maxRotation: 0,
+                                                    minRotation: 0
+                                                },
+                                                gridLines
+                                            }],
+                                        },
+                                        animation: {
+                                            duration: 420,
+                                            numSteps: 7,
+                                            easing: "easeOutQuart"
                                         }
                                     }
-                                    data={isLoaded ? chartData : {
-                                        labels: [],
-                                        datasets: [
-                                            { label: "Loading..." }
-                                        ]
-                                    }}
-                                />
-                            </LoadingOverlay>
-                        </Col>
-                    </Row>
-                </Container>
+                                }
+                                data={isLoaded ? chartData : {
+                                    labels: [],
+                                    datasets: [
+                                        { label: "Loading..." }
+                                    ]
+                                }}
+                            />
+                        </LoadingOverlay>
+                    </Col>
+                </Row>
             </Container>
-        );
-    }
+        </Container>
+    );
 }
 
 export default LineChart;
