@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'reactstrap';
 import './StatCard.css';
 
 function StatCard(props) {
+
     return(
         <Container className="stat-card"
             id={props.id}>
@@ -13,7 +14,7 @@ function StatCard(props) {
             
                 }}>
                     <h3 className="card-title">{props.title}</h3>
-                    <p className="card-text">{props.text}</p>
+                    <p className="card-text">{props.text.substring(0, 9)}</p>
                 </div>
                 </Col>
                 <Col>
