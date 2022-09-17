@@ -31,7 +31,7 @@ const Data = require('../../models/Data');
  *       properties:
  *         _id:
  *           type: String
- *           description: Auto-generated id of the sensor data enrty
+ *           description: Auto-generated id of the sensor data entry
  *         pm25:
  *           type: Number
  *           description: Particulate Matter - 2.5 micrometers and smaller.
@@ -71,7 +71,7 @@ const Data = require('../../models/Data');
  * @swagger 
  * /api/data:
  *   post: 
- *     summary: Create new sensor data enrty
+ *     summary: Create new sensor data entry
  *     requestBody:
  *      required: true
  *      content:
@@ -121,7 +121,7 @@ router.post('/', auth, (req, res) => {
  * /api/data:
  *   get: 
  *     summary: Get sensor data
- *     description: By default the most recent data enty is returned (1). Getting multiple entires for a given timeframe can be controled via query params
+ *     description: By default the most recent data entry is returned (1). Getting multiple entires for a given time frame can be controlled via query params
  *     parameters:
  *      - in: query
  *        name: hours
@@ -141,7 +141,7 @@ router.post('/', auth, (req, res) => {
  *        name: groupByHour 
  *        schema:
  *         type: boolean
- *        description: The avarage of the sensor data grouped by hour
+ *        description: The average of the sensor data grouped by hour
  *     responses:  
  *       200: 
  *         description: Success
@@ -159,7 +159,11 @@ router.get('/', (req, res) => {
     if (Object.keys(req.query).length === 0) {
         Data.findOne()
             .sort({ $natural: -1 })
-            .then(data => res.json(data));
+            .then(data => {
+                data = data || [];
+                return res.json(data);
+            })
+            .catch(err => res.status(500).json({}));
 
         return;
     }

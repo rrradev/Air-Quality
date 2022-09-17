@@ -16,8 +16,8 @@ jobs:
 
       - name: API tests
         env:
-          NODE_ENV: production
           MONGO_URI: ${{ secrets.MONGO_URI }}
+          AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
         run: |
           npm install
           npm run test
