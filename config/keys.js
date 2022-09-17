@@ -1,15 +1,9 @@
-var mongoURI, auth_token;
+let mongoURI, authToken;
 
-if (process.env.NODE_ENV === 'production') {
-    mongoURI = process.env.MONGO_URI;
-    auth_token = process.env.AUTH_TOKEN;
-} else {
-    const secrets = require('../secrets');
+mongoURI = process.env.MONGO_URI || require('../secrets').requestMongoURI();
+authToken = process.env.AUTH_TOKEN || require('../secrets').requestToken();
 
-    mongoURI = secrets.requestMongoURI();
-    auth_token = secrets.requestToken();
-}
 module.exports = {
     mongoURI,
-    auth_token
+    authToken
 } 
