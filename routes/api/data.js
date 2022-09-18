@@ -98,10 +98,9 @@ router.post('/', auth, (req, res) => {
         }];
 
         error.push(req.body);
-        res.status(400).json(error);
         console.log("Invalid data");
 
-        return;
+        return res.status(400).json(error);
     }
 
     const newData = new Data({
@@ -164,27 +163,20 @@ router.get('/', (req, res) => {
                 return res.json(data);
             })
             .catch(err => res.status(500).json({}));
-
         return;
     }
 
     let { hours, days, groupByHour } = req.query;
 
-    if (days == 1) {
-        hours = 24;
-    } else {
-        hours = +hours || 1;
-    }
+    hours = +hours || 1;
+
+    if (days >= 1 || hours > 24) hours = 24;
+    if (hours < 0) hours = 1;
 
     days = +days || 1;
 
-    if (hours < 0 || hours > 24 || days > 1) {
-        hours = 24;
-    }
-
-    if (days < 0 || days > 365) {
-        days = 365;
-    }
+    if (days > 30) days = 30;
+    if (days < 1) days = 1;
 
     const pastDate = new Date(
         new Date().getTime() - (days * hours * 60 * 60 * 1000)
