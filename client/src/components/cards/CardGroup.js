@@ -20,8 +20,9 @@ function CardArea(props) {
                     if (Object.keys(values).length !== 0) {
                         setValues(values);
                         setIsLoaded(true);
+                    } else {
+                        props.error(new Error("No recent data ;("));
                     }
-
                 },
                 (error) => {
                     props.error(error);
