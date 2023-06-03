@@ -4,11 +4,11 @@ const chaiHttp = require('chai-http');
 const { expect } = require('chai');
 const crypto = require('crypto');
 
-const endpoint = '/api/data';
+const dataUri = '/api/data';
 
 chai.use(chaiHttp);
 
-describe('Test route ' + endpoint, () => {
+describe('Test route ' + dataUri, () => {
     before(function () {
         if (process.env.NODE_ENV === 'production')
             this.skip();
@@ -21,7 +21,7 @@ describe('Test route ' + endpoint, () => {
 
     it('It should NOT allow submitting data without authorization', async () => {
         let res = await chai.request(server)
-            .post(endpoint);
+            .post(dataUri);
 
         expect(res).to.have.status(401);
         expect(res.body.error).to.equal("Missing Authorization header: x-auth-token");
@@ -31,7 +31,7 @@ describe('Test route ' + endpoint, () => {
         let randomString = crypto.randomBytes(20).toString('hex');
 
         let res = await chai.request(server)
-            .post(endpoint)
+            .post(dataUri)
             .set('x-auth-token', randomString);
 
         expect(res).to.have.status(401);
@@ -42,7 +42,7 @@ describe('Test route ' + endpoint, () => {
         let token = require('../config/keys').authToken;
 
         let res = await chai.request(server)
-            .post(endpoint)
+            .post(dataUri)
             .set('x-auth-token', token)
             .send({ pm25, pm10, temp, hum });
 
@@ -55,9 +55,10 @@ describe('Test route ' + endpoint, () => {
 
     it('It should return the last data entry', async () => {
         let res = await chai.request(server)
-            .get(endpoint);
+            .get(dataUri);
 
         expect(res).to.have.status(200);
+        expect(res.body).to.be.an("object");
         expect(res.body.pm25, "pm25 is correct").to.equal(pm25);
         expect(res.body.pm10, "pm10 is correct").to.equal(pm10);
         expect(res.body.temp, "temp is correct").to.equal(temp);
@@ -66,20 +67,21 @@ describe('Test route ' + endpoint, () => {
 
     it('It should return data for the past 24 hours', async () => {
         let res = await chai.request(server)
-            .get(endpoint)
+            .get(dataUri)
             .query({ hours: '24' });
-
         expect(res).to.have.status(200);
-        expect(res.body).to.not.be.empty;
+        expect(res.body).to.be.an("array");
+        expect(res.body).to.not.have.length(0);
     });
 
     it('It should return data for the past 30 days grouped hourly', async () => {
         let res = await chai.request(server)
-            .get(endpoint)
+            .get(dataUri)
             .query({ days: '30', groupByHour: 'true' });
 
         expect(res).to.have.status(200);
-        expect(res.body).to.not.be.empty;
+        expect(res.body).to.be.an("array");
+        expect(res.body).to.not.have.length(0);
     });
 
 });
