@@ -14,6 +14,7 @@ const MainPanel = (props) => {
         closeOnClick: false,
         theme: 'colored',
         icon: "☄️",
+        toastId: "error",
         });
 
     return (
