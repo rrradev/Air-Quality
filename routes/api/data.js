@@ -156,7 +156,11 @@ router.get('/', (req, res) => {
     console.log(req.query);
 
     if (Object.keys(req.query).length === 0) {
-        Data.findOne()
+        const pastHour = new Date(
+            new Date().getTime() - (60 * 60 * 1000)
+        );
+
+        Data.findOne({ "date": { "$gte": pastHour } })
             .sort({ $natural: -1 })
             .then(data => {
                 data = data || [];
