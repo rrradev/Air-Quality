@@ -58,6 +58,8 @@ describe('Test route ' + endpoint, () => {
             .get(endpoint);
 
         expect(res).to.have.status(200);
+        expect(res.body).to.be.an("array");
+        expect(res.body).to.have.lengthOf(1);
         expect(res.body.pm25, "pm25 is correct").to.equal(pm25);
         expect(res.body.pm10, "pm10 is correct").to.equal(pm10);
         expect(res.body.temp, "temp is correct").to.equal(temp);
