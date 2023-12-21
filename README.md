@@ -7,7 +7,7 @@
 [![CHART-JS](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://react-chartjs-2.js.org/)
 
 # Air-Quality [![CI](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml/badge.svg)](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml)
-Web app that collects air quality metrics from a [sensor node](https://github.com/radradef/esp32SensorNode "radradef/esp32SensorNode") and plots the data on charts (particulate matter, temperature and humidity).
+Web app that collects air quality measurements from a [sensor node](https://github.com/radradef/esp32SensorNode "radradef/esp32SensorNode") and plots the data on charts (particulate matter, temperature and humidity).
 
 Deployed on heroku: https://airqt.herokuapp.com
 
