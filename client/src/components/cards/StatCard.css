@@ -40,8 +40,9 @@
 }
 
 .image {
-    width: 80px;
-    height: 80px;
+    margin-top: 3px;
+    width: 75px;
+    height: 75px;
     transform: scale(1);
     transition: .2s ease;
 }
@@ -49,8 +50,8 @@
 @media screen and (min-width: 992px) and (max-width: 1240px) {
 
     .image {
-        width: 45px;
-        height: 45px;
+        width: 41px;
+        height: 41px;
     }
 
     .card-title {
@@ -60,4 +61,14 @@
     .card-text {
         font-size: 18px;
     }
+
+}
+
+@media screen and (min-width: 576px) and (max-width: 991px) {
+
+    .image {
+        height: 70px;
+        width: 70px;
+    }
+
 }
