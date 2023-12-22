@@ -15,9 +15,9 @@ describe('Test route ' + URI, () => {
             this.skip();
     });
 
-    const token = require('../config/keys').authToken;
-    const auth = {
-        'x-auth-token': token,
+    const TOKEN = require('../config/keys').authToken;
+    const AUTH = {
+        'x-auth-token': TOKEN,
     };
 
     const TEST_DATA = randomData();
@@ -46,7 +46,7 @@ describe('Test route ' + URI, () => {
 
         let res = await chai.request(server)
             .post(URI)
-            .set(auth)
+            .set(AUTH)
             .send(TEST_DATA);
 
         expect(res).to.have.status(201);
@@ -90,12 +90,12 @@ describe('Test route ' + URI, () => {
         expect(res.body).to.not.have.length(0);
     });
 
-    it('should not delete data with invalid id', async () => {
+    it('should NOT delete data with invalid id', async () => {
         let id = '1';
 
         let res = await chai.request(server)
             .delete(URI.concat("/").concat(id))
-            .set(auth)
+            .set(AUTH)
             .send();
 
         expect(res).to.have.status(404);
@@ -107,17 +107,27 @@ describe('Test route ' + URI, () => {
 
         let id = await chai.request(server)
             .post(URI)
-            .set(auth)
+            .set(AUTH)
             .send(data)
             .then(res => res.body._id);
 
         let res = await chai.request(server)
             .delete(URI.concat("/").concat(id))
-            .set(auth)
+            .set(AUTH)
             .send();
 
         expect(res).to.have.status(200);
         expect(res.body.id, ":id is returned in body").to.equal(id);
+    });
+
+    it('should NOT delete data without authorization', async () => {
+        let id = '1';
+
+        let res = await chai.request(server)
+            .delete(URI.concat("/").concat(id))
+            .send();
+
+        expect(res).to.have.status(401);
     });
 
 });
