@@ -55,8 +55,6 @@ describe('Test route ' + URI, () => {
         expect(res.body.temp, "temp is correct").to.equal(temp);
         expect(res.body.hum, "hum is correct").to.equal(hum);
         expect(res.body._id, "id is returned").to.not.be.empty;
-
-        return res.body._id;
     });
 
     it('should return the last data entry', async () => {
