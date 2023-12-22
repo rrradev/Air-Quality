@@ -71,6 +71,8 @@ const Data = require('../../models/Data');
  * @swagger 
  * /api/data:
  *   post: 
+ *     tags: 
+ *      - data controller
  *     summary: Create new sensor data entry
  *     requestBody:
  *      required: true
@@ -119,6 +121,8 @@ router.post('/', auth, (req, res) => {
  * @swagger 
  * /api/data:
  *   get: 
+ *     tags: 
+ *      - data controller
  *     summary: Get sensor data
  *     description: By default the most recent data entry is returned (1). Getting multiple entires for a given time frame can be controlled via query params
  *     parameters:
@@ -195,5 +199,37 @@ router.get('/', (req, res) => {
             .then(data => res.json(data));
     }
 });
+
+/** 
+ * @swagger 
+ * /api/data/{id}:
+ *   delete:
+ *     tags: 
+ *      - data controller
+ *     summary: Delete data entry
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *     security:
+ *      - ApiKeyAuth: []
+ *     responses:  
+ *       200: 
+ *         description: OK
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Not Found
+ */
+router.delete('/:id', auth, (req, res) => {
+    Data.deleteOne({ _id: req.params.id })
+        .then(result => {
+            if (result.deletedCount === 1) {
+                res.json(req.params)
+            } else {
+                throw new Error();
+            }
+        })
+        .catch(err => res.status(404).json(req.params));
+})
 
 module.exports = router;
