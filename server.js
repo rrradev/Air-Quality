@@ -43,9 +43,10 @@ if (process.env.NODE_ENV === 'production') {
       next();
     }
   });
-}
+  // API
+  app.use('/api/data', data);
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
