@@ -15,13 +15,15 @@ const MainPanel = (props) => {
         theme: 'colored',
         icon: "☄️",
         toastId: "error",
-        });
+    });
+
+    const dismissToast = () => toast.dismiss("error");
 
     return (
         <div id="panel">
             <ToastContainer />
             <NavBar isBulbOn={props.themeToggler} />
-            <CardGroup error={notify} />
+            <CardGroup notify={notify} dismissToast={dismissToast} />
             <ChartGroup />
         </div>
     );
