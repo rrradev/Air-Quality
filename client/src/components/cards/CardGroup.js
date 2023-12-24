@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from "reactstrap";
 import StatCard from './StatCard';
 
-function CardArea(props) {
+function CardArea({ notify, dismissToast }) {
     const [values, setValues] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const defaultText = "----";
@@ -20,14 +20,15 @@ function CardArea(props) {
                     if (Object.keys(values).length !== 0) {
                         setValues(values);
                         setIsLoaded(true);
+                        dismissToast();
                     } else {
-                        props.error(new Error("No recent data ;("));
+                        throw new Error("No recent data ;(");
                     }
-                },
-                (error) => {
-                    props.error(error);
                 }
-            );
+            ).catch(error => {
+                notify(error);
+                setIsLoaded(false);
+            });
     }
 
     useEffect(() => {
