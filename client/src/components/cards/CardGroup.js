@@ -7,6 +7,12 @@ function CardArea({ notify, dismissToast }) {
     const [isLoaded, setIsLoaded] = useState(false);
     const defaultText = "----";
 
+    const getValidPM = (pm) => {
+        pm = parseFloat(pm).toFixed(1);
+
+        return pm > 99.9 ? Math.round(pm) : pm;
+    }
+
     const fetchData = () => {
         fetch("/api/data")
             .then(res => {
@@ -22,7 +28,7 @@ function CardArea({ notify, dismissToast }) {
                         setIsLoaded(true);
                         dismissToast();
                     } else {
-                        throw new Error("No recent data ;(");
+                        throw new Error("No recent data");
                     }
                 }
             ).catch(error => {
@@ -50,13 +56,13 @@ function CardArea({ notify, dismissToast }) {
                 <Col lg="3" sm="6">
                     <StatCard title="PM25"
                         id="pm25"
-                        text={isLoaded ? values.pm25 + " µg/㎥" : defaultText}
+                        text={isLoaded ? getValidPM(values.pm25) + " µg/㎥" : defaultText}
                         imgURL="/icons/gas.png" />
                 </Col>
                 <Col lg="3" sm="6">
                     <StatCard title="PM10"
                         id="pm10"
-                        text={isLoaded ? values.pm10 + " µg/㎥" : defaultText}
+                        text={isLoaded ? getValidPM(values.pm10) + " µg/㎥" : defaultText}
                         imgURL="/icons/gas.png" />
                 </Col>
                 <Col lg="3" sm="6">
