@@ -14,7 +14,7 @@ function StatCard(props) {
             
                 }}>
                     <h3 className="card-title">{props.title}</h3>
-                    <p className="card-text">{props.text.substring(0, 9)}</p>
+                    <p className="card-text">{props.text}</p>
                 </div>
                 </Col>
                 <Col>
