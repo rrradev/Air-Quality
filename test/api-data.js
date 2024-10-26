@@ -19,11 +19,10 @@ describe('Test route ' + URI, () => {
     const AUTH = {
         'x-auth-token': TOKEN,
     };
-
     const TEST_DATA = randomData();
 
     it('should NOT allow submitting data without authorization', async () => {
-        let res = await chai.request(server)
+        const res = await chai.request(server)
             .post(URI);
 
         expect(res).to.have.status(401);
@@ -31,9 +30,9 @@ describe('Test route ' + URI, () => {
     });
 
     it('should NOT allow submitting data with wrong authorization', async () => {
-        let randomString = crypto.randomBytes(20).toString('hex');
+        const randomString = crypto.randomBytes(20).toString('hex');
 
-        let res = await chai.request(server)
+        const res = await chai.request(server)
             .post(URI)
             .set('x-auth-token', randomString);
 
@@ -42,9 +41,9 @@ describe('Test route ' + URI, () => {
     });
 
     it('should allow submitting data', async () => {
-        let { pm25, pm10, temp, hum } = TEST_DATA;
+        const { pm25, pm10, temp, hum } = TEST_DATA;
 
-        let res = await chai.request(server)
+        const res = await chai.request(server)
             .post(URI)
             .set(AUTH)
             .send(TEST_DATA);
@@ -58,9 +57,9 @@ describe('Test route ' + URI, () => {
     });
 
     it('should return the last data entry', async () => {
-        let { pm25, pm10, temp, hum } = TEST_DATA;
+        const { pm25, pm10, temp, hum } = TEST_DATA;
 
-        let res = await chai.request(server)
+        const res = await chai.request(server)
             .get(URI);
 
         expect(res).to.have.status(200);
@@ -72,7 +71,7 @@ describe('Test route ' + URI, () => {
     });
 
     it('should return data for the past 24 hours', async () => {
-        let res = await chai.request(server)
+        const res = await chai.request(server)
             .get(URI)
             .query({ hours: '24' });
         expect(res).to.have.status(200);
@@ -81,7 +80,7 @@ describe('Test route ' + URI, () => {
     });
 
     it('should return data for the past 30 days grouped hourly', async () => {
-        let res = await chai.request(server)
+        const res = await chai.request(server)
             .get(URI)
             .query({ days: '30', groupByHour: 'true' });
 
@@ -91,9 +90,9 @@ describe('Test route ' + URI, () => {
     });
 
     it('should NOT delete data with invalid id', async () => {
-        let id = '1';
+        const id = '1';
 
-        let res = await chai.request(server)
+        const res = await chai.request(server)
             .delete(URI.concat("/").concat(id))
             .set(AUTH)
             .send();
@@ -103,15 +102,15 @@ describe('Test route ' + URI, () => {
     });
 
     it('should delete data with id', async () => {
-        let data = randomData();
+        const DATA = randomData();
 
-        let id = await chai.request(server)
+        const id = await chai.request(server)
             .post(URI)
             .set(AUTH)
-            .send(data)
+            .send(DATA)
             .then(res => res.body._id);
 
-        let res = await chai.request(server)
+        const res = await chai.request(server)
             .delete(URI.concat("/").concat(id))
             .set(AUTH)
             .send();
@@ -121,13 +120,69 @@ describe('Test route ' + URI, () => {
     });
 
     it('should NOT delete data without authorization', async () => {
-        let id = '1';
+        const id = '1';
 
-        let res = await chai.request(server)
+        const res = await chai.request(server)
             .delete(URI.concat("/").concat(id))
             .send();
 
         expect(res).to.have.status(401);
+    });
+
+    it('should accept numeric strings and 0s', async () => {
+        const DATA = {
+            pm25: "0.0",
+            pm10: 0.0,
+            temp: "-1",
+            hum: "85.22",
+        };
+        const { pm25, pm10, temp, hum } = DATA;
+
+        const res = await chai.request(server)
+            .post(URI)
+            .set(AUTH)
+            .send(DATA);
+
+        expect(res).to.have.status(201);
+        expect(res.body.pm25, "pm25 is correct").to.equal(parseFloat(pm25));
+        expect(res.body.pm10, "pm10 is correct").to.equal(parseFloat(pm10));
+        expect(res.body.temp, "temp is correct").to.equal(parseFloat(temp));
+        expect(res.body.hum, "hum is correct").to.equal(parseFloat(hum));
+    });
+
+    it('should NOT accept incomplete data', async () => {
+        const DATA = {
+            pm25: 1,
+            pm10: 2,
+            temp: 3,
+        };
+
+        const res = await chai.request(server)
+            .post(URI)
+            .set(AUTH)
+            .send(DATA);
+
+        expect(res).to.have.status(400);
+        expect(res.body[0].error, "Error is correct").to.equal("Invalid Data.");
+        expect(res.body[1], "Submitted data is returned").to.deep.equal(DATA);
+    });
+
+    it('should NOT accept NaNs', async () => {
+        const DATA = {
+            pm25: 1,
+            pm10: 2,
+            temp: 3,
+            hum: "asd",
+        };
+
+        const res = await chai.request(server)
+            .post(URI)
+            .set(AUTH)
+            .send(DATA);
+
+        expect(res).to.have.status(400);
+        expect(res.body[0].error, "Error is correct").to.equal("Invalid Data.");
+        expect(res.body[1], "Data is returned").to.deep.equal(DATA);
     });
 
 });
