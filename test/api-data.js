@@ -3,7 +3,8 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { expect } = require('chai');
 const crypto = require('crypto');
-const { randomData } = require('./util/testHelper')
+const { randomData } = require('./util/data-generator');
+const { expectToDeepEqualIgnoringFields } = require('./util/custom-assert');
 
 const URI = '/api/data';
 
@@ -19,7 +20,8 @@ describe('Test route ' + URI, () => {
     const AUTH = {
         'x-auth-token': TOKEN,
     };
-    const TEST_DATA = randomData();
+    const RANDOM_TEST_DATA = randomData();
+    const FIELDS_TO_IGNORE = ['__v', '_id', 'date'];
 
     it('should NOT allow submitting data without authorization', async () => {
         const res = await chai.request(server)
@@ -41,33 +43,23 @@ describe('Test route ' + URI, () => {
     });
 
     it('should allow submitting data', async () => {
-        const { pm25, pm10, temp, hum } = TEST_DATA;
-
         const res = await chai.request(server)
             .post(URI)
             .set(AUTH)
-            .send(TEST_DATA);
+            .send(RANDOM_TEST_DATA);
 
         expect(res).to.have.status(201);
-        expect(res.body.pm25, "pm25 is correct").to.equal(pm25);
-        expect(res.body.pm10, "pm10 is correct").to.equal(pm10);
-        expect(res.body.temp, "temp is correct").to.equal(temp);
-        expect(res.body.hum, "hum is correct").to.equal(hum);
+        expectToDeepEqualIgnoringFields(res.body, RANDOM_TEST_DATA, FIELDS_TO_IGNORE);
         expect(res.body._id, "id is returned").to.not.be.empty;
     });
 
     it('should return the last data entry', async () => {
-        const { pm25, pm10, temp, hum } = TEST_DATA;
-
         const res = await chai.request(server)
             .get(URI);
 
         expect(res).to.have.status(200);
         expect(res.body).to.be.an("object");
-        expect(res.body.pm25, "pm25 is correct").to.equal(pm25);
-        expect(res.body.pm10, "pm10 is correct").to.equal(pm10);
-        expect(res.body.temp, "temp is correct").to.equal(temp);
-        expect(res.body.hum, "hum is correct").to.equal(hum);
+        expectToDeepEqualIgnoringFields(res.body, RANDOM_TEST_DATA, FIELDS_TO_IGNORE);
     });
 
     it('should return data for the past 24 hours', async () => {
@@ -90,24 +82,24 @@ describe('Test route ' + URI, () => {
     });
 
     it('should NOT delete data with invalid id', async () => {
-        const id = '1';
+        const TEST_ID = '1';
 
         const res = await chai.request(server)
-            .delete(URI.concat("/").concat(id))
+            .delete(URI.concat("/").concat(TEST_ID))
             .set(AUTH)
             .send();
 
         expect(res).to.have.status(404);
-        expect(res.body.id, ":id is returned in body").to.equal(id);
+        expect(res.body.id, ":id is returned in body").to.equal(TEST_ID);
     });
 
     it('should delete data with id', async () => {
-        const DATA = randomData();
+        const TEST_DATA = randomData();
 
         const id = await chai.request(server)
             .post(URI)
             .set(AUTH)
-            .send(DATA)
+            .send(TEST_DATA)
             .then(res => res.body._id);
 
         const res = await chai.request(server)
@@ -120,28 +112,28 @@ describe('Test route ' + URI, () => {
     });
 
     it('should NOT delete data without authorization', async () => {
-        const id = '1';
+        const TEST_ID = '1';
 
         const res = await chai.request(server)
-            .delete(URI.concat("/").concat(id))
+            .delete(URI.concat("/").concat(TEST_ID))
             .send();
 
         expect(res).to.have.status(401);
     });
 
     it('should accept numeric strings and 0s', async () => {
-        const DATA = {
+        const TEST_DATA = {
             pm25: "0.0",
             pm10: 0.0,
             temp: "-1",
             hum: "85.22",
         };
-        const { pm25, pm10, temp, hum } = DATA;
+        const { pm25, pm10, temp, hum } = TEST_DATA;
 
         const res = await chai.request(server)
             .post(URI)
             .set(AUTH)
-            .send(DATA);
+            .send(TEST_DATA);
 
         expect(res).to.have.status(201);
         expect(res.body.pm25, "pm25 is correct").to.equal(parseFloat(pm25));
@@ -151,7 +143,7 @@ describe('Test route ' + URI, () => {
     });
 
     it('should NOT accept incomplete data', async () => {
-        const DATA = {
+        const TEST_DATA = {
             pm25: 1,
             pm10: 2,
             temp: 3,
@@ -160,15 +152,15 @@ describe('Test route ' + URI, () => {
         const res = await chai.request(server)
             .post(URI)
             .set(AUTH)
-            .send(DATA);
+            .send(TEST_DATA);
 
         expect(res).to.have.status(400);
         expect(res.body[0].error, "Error is correct").to.equal("Invalid Data.");
-        expect(res.body[1], "Submitted data is returned").to.deep.equal(DATA);
+        expect(res.body[1], "Submitted data is returned").to.deep.equal(TEST_DATA);
     });
 
     it('should NOT accept NaNs', async () => {
-        const DATA = {
+        const TEST_DATA = {
             pm25: 1,
             pm10: 2,
             temp: 3,
@@ -178,11 +170,35 @@ describe('Test route ' + URI, () => {
         const res = await chai.request(server)
             .post(URI)
             .set(AUTH)
-            .send(DATA);
+            .send(TEST_DATA);
 
         expect(res).to.have.status(400);
         expect(res.body[0].error, "Error is correct").to.equal("Invalid Data.");
-        expect(res.body[1], "Data is returned").to.deep.equal(DATA);
+        expect(res.body[1], "Data is returned").to.deep.equal(TEST_DATA);
+    });
+
+    it('should round the data to 2 decimal places', async () => {
+        const TEST_DATA = {
+            pm25: 1.1254,
+            pm10: -2.424323,
+            temp: "-23.1231",
+            hum: 0,
+        };
+
+        const EXPECTED_DATA = {
+            pm25: 1.13,
+            pm10: -2.42,
+            temp: -23.12,
+            hum: 0
+        }
+
+        const res = await chai.request(server)
+            .post(URI)
+            .set(AUTH)
+            .send(TEST_DATA);
+        
+        expect(res).to.have.status(201);
+        expectToDeepEqualIgnoringFields(res.body, EXPECTED_DATA, FIELDS_TO_IGNORE);
     });
 
 });

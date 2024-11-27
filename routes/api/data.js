@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const { groupByHourPipeline } = require('../../lib/db/db_pipelines');
 const Data = require('../../models/Data');
-const { hasNaNs } = require('../../lib/util/numeric_utils');
+const { hasNaNs, parseAndRound } = require('../../lib/util/numeric_utils');
 
 /**
  * @swagger
@@ -93,13 +93,12 @@ router.post('/', auth, (req, res) => {
     console.log('POST ' + JSON.stringify(req.body));
 
     let { pm25, pm10, temp, hum } = req.body;
-    pm25 = parseFloat(pm25);
-    pm10 = parseFloat(pm10);
-    temp = parseFloat(temp);
-    hum = parseFloat(hum);
+    pm25 = parseAndRound(pm25);
+    pm10 = parseAndRound(pm10);
+    temp = parseAndRound(temp);
+    hum = parseAndRound(hum);
 
     if (hasNaNs(pm25, pm10, temp, hum)) {
-
         let error = [{
             "error": "Invalid Data."
         }];
