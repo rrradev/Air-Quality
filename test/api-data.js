@@ -4,7 +4,7 @@ const chaiHttp = require('chai-http');
 const { expect } = require('chai');
 const crypto = require('crypto');
 const { randomData } = require('./util/data-generator');
-const { expectToDeepEqualIgnoringFields } = require('./util/custom-assert');
+const { expectToDeepEqualIgnoringFields, expectDatesToBeWithinHours } = require('./util/custom-assert');
 
 const URI = '/api/data';
 
@@ -29,6 +29,7 @@ describe('Test route ' + URI, () => {
 
         expect(res).to.have.status(401);
         expect(res.body.error).to.equal("Missing Authorization header: x-auth-token");
+        
     });
 
     it('should NOT allow submitting data with wrong authorization', async () => {
@@ -51,6 +52,7 @@ describe('Test route ' + URI, () => {
         expect(res).to.have.status(201);
         expectToDeepEqualIgnoringFields(res.body, RANDOM_TEST_DATA, FIELDS_TO_IGNORE);
         expect(res.body._id, "id is returned").to.not.be.empty;
+        expectDatesToBeWithinHours(new Date(res.body.date), new Date(), 2);
     });
 
     it('should return the last data entry', async () => {
