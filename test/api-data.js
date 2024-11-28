@@ -4,7 +4,7 @@ const chaiHttp = require('chai-http');
 const { expect } = require('chai');
 const crypto = require('crypto');
 const { randomData } = require('./util/data-generator');
-const { expectToDeepEqualIgnoringFields } = require('./util/custom-assert');
+const { expectToDeepEqualIgnoringFields, expectDatesToBeWithinSeconds } = require('./util/custom-assert');
 
 const URI = '/api/data';
 
@@ -51,6 +51,7 @@ describe('Test route ' + URI, () => {
         expect(res).to.have.status(201);
         expectToDeepEqualIgnoringFields(res.body, RANDOM_TEST_DATA, FIELDS_TO_IGNORE);
         expect(res.body._id, "id is returned").to.not.be.empty;
+        expectDatesToBeWithinSeconds(new Date(res.body.date), new Date(), 10);
     });
 
     it('should return the last data entry', async () => {
@@ -196,7 +197,7 @@ describe('Test route ' + URI, () => {
             .post(URI)
             .set(AUTH)
             .send(TEST_DATA);
-        
+
         expect(res).to.have.status(201);
         expectToDeepEqualIgnoringFields(res.body, EXPECTED_DATA, FIELDS_TO_IGNORE);
     });
