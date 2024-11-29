@@ -29,11 +29,14 @@ jobs:
         run: |
           npm ci
           npx playwright install --with-deps
-      - name: Start development server
-        run: npm run dev
       - name: Run Playwright UI tests
-        working-directory: ./client
-        run: npx playwright test
+        run: |
+          npm run dev &
+          while ! nc -z localhost 3000; do
+            echo "Waiting for server to start..."
+            sleep 1
+          done         
+          npm run test:ui
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
