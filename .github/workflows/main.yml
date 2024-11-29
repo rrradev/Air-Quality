@@ -38,8 +38,7 @@ jobs:
           done         
           npm run test:ui
       - name: Deploy Playwright report to GitHub Pages
-        working-directory: ./client
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./playwright-report
+          publish_dir: ./client/playwright-report
