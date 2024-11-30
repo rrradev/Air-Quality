@@ -14,5 +14,4 @@ export default class BasePage {
     async goto(url: string) {
         await this.page.goto(url);
     }
-
 }

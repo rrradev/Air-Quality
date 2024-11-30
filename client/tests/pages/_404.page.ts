@@ -1,7 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import BasePage from "./base.page";
 
-
 export default class _404Page extends BasePage {
     notFoundImage: Locator;
     notFoundMessage: Locator;
