@@ -5,8 +5,11 @@
 [![MONGODB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/cloud)
 [![REACT](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![CHART-JS](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://www.chartjs.org/docs/latest/)
+[![PLAYWRIGHT](https://img.shields.io/badge/Playwright-orange?style=for-the-badge)](https://playwright.dev)
 
-# Air-Quality [![CI](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml/badge.svg)](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml)
+# Air-Quality 
+[![CI](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml/badge.svg)](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml) [![Playwright Report](https://img.shields.io/badge/Playwright%20Report-%20-blue?)](https://rrradev.github.io/Air-Quality/)
+
 A web application that collects air quality data from a [sensor node](https://github.com/radradef/esp32SensorNode "radradef/esp32SensorNode") and visualizes it using charts (particulate matter, temperature and humidity).
 
 Deployed on heroku: https://airqt.herokuapp.com

@@ -84,13 +84,6 @@ function LineChart(props) {
                         }
                     }
                 },
-                (error) => {
-                    if (error.name === "AbortError") {
-                        return;
-                    } else {
-                        setIsLoaded(true);
-                    }
-                }
             );
     }
 
