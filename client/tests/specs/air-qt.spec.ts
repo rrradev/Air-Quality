@@ -15,7 +15,7 @@ test('pm chart is displayed', async ({ mainPage }) => {
   await expect(pmChart.chartTitle).toHaveText("Particulate matter over the last hour");
 });
 
-test.only('error toast and loading indicator are displayed when it fails to fetch data', async ({ mainPage, page }) => {
+test('error toast and loading indicator are displayed when it fails to fetch data', async ({ mainPage, page }) => {
   const pmChart = mainPage.pmChart;
   const pmCard = mainPage.pmCard;
 
