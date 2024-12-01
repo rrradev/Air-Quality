@@ -1,6 +1,5 @@
 import { test, expect } from './setup';
 
-
 test('has correct title', async ({ mainPage }) => {
   await expect(mainPage.navBarLink).toHaveText("Air Quality");
 });
