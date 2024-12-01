@@ -30,13 +30,7 @@ jobs:
           npm ci
           npx playwright install --with-deps
       - name: Run Playwright UI tests
-        run: |
-          npm run dev &
-          while ! nc -z localhost 3000; do
-            echo "Waiting for server to start..."
-            sleep 1
-          done         
-          npm run test:ui
+        run:  npm run test:ui
       - name: Deploy Playwright report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:

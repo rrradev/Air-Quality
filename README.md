@@ -3,8 +3,10 @@
 [![NODE](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![EXPRESS](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
 [![MONGODB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/cloud)
-[![REACT](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![CHART-JS](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://www.chartjs.org/docs/latest/)
+[![REACT](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/) 
+[![CHART-JS](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://www.chartjs.org/docs/latest/)\
+[![MOCHA](https://img.shields.io/badge/mocha.js-323330?style=for-the-badge&logo=mocha&logoColor=Brown)](https://mochajs.org/)
+[![CHAI](https://img.shields.io/badge/chai.js-323330?style=for-the-badge&logo=chai&logoColor=red)](https://www.chaijs.com/plugins/chai-http/)
 [![PLAYWRIGHT](https://img.shields.io/badge/Playwright-orange?style=for-the-badge)](https://playwright.dev)
 
 # Air-Quality 
@@ -16,10 +18,20 @@ Deployed on heroku: https://airqt.herokuapp.com
 
 API documentation: https://airqt.herokuapp.com/api-docs
 
-![ScreenL](https://user-images.githubusercontent.com/25829240/178979923-c9cccfb7-52bf-40b9-b5e4-313d82b194f1.png)
+![Screenshot 2024-12-01 211431](https://github.com/user-attachments/assets/9779f3ab-5461-465f-8652-496f991e9312)
 
 ## Running the app in development mode 
- Set MongoDB URI in secrets.js
+ * [![NODE](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org)
+ * Set [MongoDB URI](https://www.mongodb.com/docs/manual/reference/connection-string/) in secrets.js (for reference - [secrets_template.js](https://github.com/rrradev/Air-Quality/blob/master/secrets_template.js))
+   
 1. `npm install`
 2. `npm run client-install`
 3. `npm run dev`
+
+## Running tests
+#### [API](https://github.com/rrradev/Air-Quality/blob/master/test/api-data.js)
+1. `npm test`
+
+#### [UI](https://github.com/rrradev/Air-Quality/blob/master/client/tests/specs/air-qt.spec.ts)
+1. `npm run dev`
+2. `npm run test:ui`
