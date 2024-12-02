@@ -2,12 +2,14 @@ import { Locator } from "@playwright/test";
 
 export default class Chart {
     chartTitle: Locator;
-    _1hButton: Locator;
+    oneHourButton: Locator;
+    oneMonthButton: Locator; 
     loadingOverlay: Locator;
 
     constructor($: Locator) {
         this.chartTitle = $.locator('.title-text');
-        this._1hButton = $.getByRole('button', { name: '1h' });
+        this.oneHourButton = $.getByRole('button', { name: '1h' });
+        this.oneMonthButton = $.getByRole('button', { name: '1m' });
         this.loadingOverlay = $.getByTestId('overlay');
     }
 }

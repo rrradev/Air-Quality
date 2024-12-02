@@ -8,7 +8,7 @@ test('pm chart is displayed', async ({ mainPage }) => {
   const requestPromise = mainPage.waitForRequest('**/api/data?hours=1');
   const pmChart = mainPage.pmChart;
 
-  await pmChart._1hButton.click();
+  await pmChart.oneHourButton.click();
   await requestPromise;
 
   await expect(pmChart.chartTitle).toHaveText("Particulate matter over the last hour");
@@ -20,7 +20,7 @@ test('error toast and loading indicator are displayed when it fails to fetch dat
 
   await page.route('**/api/data**', (route) => route.abort());
   await mainPage.open();
-  await pmChart._1hButton.click();
+  await pmChart.oneHourButton.click();
 
   await expect(mainPage.errorToast).toHaveText(/NetworkError|Load failed|Failed to fetch/);
   await expect(pmCard.cardText).toContainText('----');
@@ -28,14 +28,14 @@ test('error toast and loading indicator are displayed when it fails to fetch dat
   await expect(pmChart.loadingOverlay).toBeVisible();
 });
 
-test('loading indicator disappears when the network is restored', async ({ mainPage, page }) => {
+test('loading indicator disappears when data is fetched', async ({ mainPage, page }) => {
   const pmChart = mainPage.pmChart;
 
   await page.route('**/api/data**', (route) => route.abort());
   await mainPage.open();
-  await pmChart._1hButton.click();
+  await pmChart.oneHourButton.click();
   await page.unroute('**/api/data**');
-  await mainPage.open();
+  await pmChart.oneMonthButton.click();
 
   await expect(pmChart.loadingOverlay).not.toBeVisible();
 });
