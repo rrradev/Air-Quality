@@ -33,5 +33,4 @@ API documentation: https://airqt.herokuapp.com/api-docs
 1. `npm test`
 
 #### [UI](https://github.com/rrradev/Air-Quality/blob/master/client/tests/specs/air-qt.spec.ts)
-1. `npm run dev`
-2. `npm run test:ui`
+1. `npm run test:ui`
