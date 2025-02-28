@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const { groupByHourPipeline } = require('../../lib/db/db_pipelines');
 const Data = require('../../models/Data');
-const { hasNaNs, parseAndRound } = require('../../lib/util/numeric_utils');
+const validateData = require('../../middleware/validateData');
 
 /**
  * @swagger
@@ -89,25 +89,9 @@ const { hasNaNs, parseAndRound } = require('../../lib/util/numeric_utils');
  *       401:
  *         description: Unauthorized
  */
-router.post('/', auth, (req, res) => {
-    console.log('POST ' + JSON.stringify(req.body));
-
+router.post('/', auth, validateData, (req, res) => {
     let { pm25, pm10, temp, hum } = req.body;
-    pm25 = parseAndRound(pm25);
-    pm10 = parseAndRound(pm10);
-    temp = parseAndRound(temp);
-    hum = parseAndRound(hum);
 
-    if (hasNaNs(pm25, pm10, temp, hum)) {
-        let error = [{
-            "error": "Invalid Data."
-        }];
-
-        error.push(req.body);
-        console.log("Invalid data");
-
-        return res.status(400).json(error);
-    }
 
     const newData = new Data({
         pm25,

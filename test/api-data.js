@@ -181,14 +181,14 @@ describe('Test route ' + URI, () => {
     it('should round the data to 2 decimal places', async () => {
         const TEST_DATA = {
             pm25: 1.1254,
-            pm10: -2.424323,
+            pm10: 2.424323,
             temp: "-23.1231",
             hum: 0,
         };
 
         const EXPECTED_DATA = {
             pm25: 1.13,
-            pm10: -2.42,
+            pm10: 2.42,
             temp: -23.12,
             hum: 0
         }
@@ -200,6 +200,39 @@ describe('Test route ' + URI, () => {
 
         expect(res).to.have.status(201);
         expectToDeepEqualIgnoringFields(res.body, EXPECTED_DATA, FIELDS_TO_IGNORE);
+    });
+
+    it('should NOT accept negative pm25', async () => {
+        const TEST_DATA = { pm25: -5, pm10: 15, temp: 20, hum: 40 };
+        const res = await chai.request(server)
+            .post(URI)
+            .set(AUTH)
+            .send(TEST_DATA);
+
+        expect(res).to.have.status(400);
+        expect(res.body.error, "Error message should match").to.equal("Invalid Data. pm25, pm10, and hum cannot be negative.");
+    });
+
+    it('should NOT accept negative pm10', async () => {
+        const TEST_DATA = { pm25: 10, pm10: -15, temp: 20, hum: 40 };
+        const res = await chai.request(server)
+            .post(URI)
+            .set(AUTH)
+            .send(TEST_DATA);
+
+        expect(res).to.have.status(400);
+        expect(res.body.error, "Error message should match").to.equal("Invalid Data. pm25, pm10, and hum cannot be negative.");
+    });
+
+    it('should NOT accept negative hum', async () => {
+        const TEST_DATA = { pm25: 10, pm10: 15, temp: 20, hum: -40 };
+        const res = await chai.request(server)
+            .post(URI)
+            .set(AUTH)
+            .send(TEST_DATA);
+
+        expect(res).to.have.status(400);
+        expect(res.body.error, "Error message should match").to.equal("Invalid Data. pm25, pm10, and hum cannot be negative.");
     });
 
 });
