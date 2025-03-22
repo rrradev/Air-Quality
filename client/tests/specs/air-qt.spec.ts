@@ -1,3 +1,4 @@
+import MainPage from '../pages/main.page';
 import { test, expect } from './setup';
 
 test('has correct title', async ({ mainPage }) => {
@@ -14,27 +15,27 @@ test('pm chart is displayed', async ({ mainPage }) => {
   await expect(pmChart.chartTitle).toHaveText("Particulate matter over the last hour");
 });
 
-test('error toast and loading indicator are displayed when it fails to fetch data', async ({ mainPage, page }) => {
+test('error toast and loading indicator are displayed when it fails to fetch data', async ({ mainPage }) => {
   const pmChart = mainPage.pmChart;
   const pmCard = mainPage.pmCard;
 
-  await page.route('**/api/data**', (route) => route.abort());
+  await mainPage.page.route('**/api/data**', (route) => route.abort());
   await mainPage.open();
   await pmChart.oneHourButton.click();
 
   await expect(mainPage.errorToast).toHaveText(/NetworkError|Load failed|Failed to fetch/);
   await expect(pmCard.cardText).toContainText('----');
-  await page.waitForTimeout(7000);
+  await mainPage.page.waitForTimeout(7000);
   await expect(pmChart.loadingOverlay).toBeVisible();
 });
 
-test('loading indicator disappears when data is fetched', async ({ mainPage, page }) => {
+test('loading indicator disappears when data is fetched', async ({ mainPage }) => {
   const pmChart = mainPage.pmChart;
 
-  await page.route('**/api/data**', (route) => route.abort());
+  await mainPage.page.route('**/api/data**', (route) => route.abort());
   await mainPage.open();
   await pmChart.oneHourButton.click();
-  await page.unroute('**/api/data**');
+  await mainPage.page.unroute('**/api/data**');
   await pmChart.oneMonthButton.click();
 
   await expect(pmChart.loadingOverlay).not.toBeVisible();
@@ -45,5 +46,23 @@ test('404 page is displayed if invalid URL is entered', async ({ mainPage, _404P
 
   await expect(_404Page.notFoundImage).toBeVisible();
   await expect(_404Page.notFoundMessage).toContainText('The requested URL was not found.');
+});
+
+test('should call /api/data?hours=24 only once', async ({ page }) => {
+  const apiUrl = '/api/data?hours=24';
+  const mainPage = new MainPage(page);
+  let callCount = 0;
+
+  page.on('request', (request) => {
+    if (request.url().includes(apiUrl)) {
+      callCount++;
+    }
+  });
+
+  await page.goto('/');
+  await expect(mainPage.pmChart.loadingOverlay).not.toBeVisible();
+  await expect(mainPage.tempChart.loadingOverlay).not.toBeVisible();
+  await page.waitForTimeout(500);
+  expect(callCount).toBe(1);
 });
 
