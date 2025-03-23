@@ -7,13 +7,15 @@ export default class MainPage extends BasePage {
     navBarLink: Locator;
     pmCard: Card;
     pmChart: Chart;
+    tempChart: Chart;
     errorToast: Locator;
 
     constructor(page: Page) {
         super(page)
         this.navBarLink = page.locator('.navbar-brand');
-        this.pmChart = new Chart(page.locator('.chart-container').first());
         this.pmCard = new Card(page.locator('#pm25'));
+        this.pmChart = new Chart(page.locator('.chart-container').first());
+        this.tempChart = new Chart(page.locator('.chart-container').nth(1));
         this.errorToast = page.locator('#error');
     }
 
