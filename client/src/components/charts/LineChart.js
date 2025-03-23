@@ -4,6 +4,8 @@ import { Line } from 'react-chartjs-2';
 import { Spinner, Container, Row, Col } from 'reactstrap';
 import LoadingOverlay from 'react-loading-overlay';
 import './LineChart.css';
+import { fetchCachedData } from '../../services/dataFetcher';
+import { DATA_FETCH_INTERVAL_MS } from '../../config/constants';
 
 function LineChart(props) {
 
@@ -65,8 +67,7 @@ function LineChart(props) {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const fetchData = () => {
-        fetch(endpoint, { signal: abortController.signal })
-            .then(res => res.json())
+        fetchCachedData(endpoint, abortController.signal)
             .then(
                 (values) => {
                     if (window.Worker) {
@@ -92,7 +93,7 @@ function LineChart(props) {
 
         const interval = setInterval(() => {
             fetchData();
-        }, 10 * 60 * 1000);
+        }, DATA_FETCH_INTERVAL_MS);
 
         return () => clearInterval(interval);
     }, [endpoint]);

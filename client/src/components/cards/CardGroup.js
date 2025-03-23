@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from "reactstrap";
 import StatCard from './StatCard';
+import { DATA_FETCH_INTERVAL_MS } from '../../config/constants';
 
 function CardArea({ notify, dismissToast }) {
     const [values, setValues] = useState([]);
@@ -42,7 +43,7 @@ function CardArea({ notify, dismissToast }) {
 
         const interval = setInterval(() => {
             fetchData();
-        }, 10 * 60 * 1000);
+        }, DATA_FETCH_INTERVAL_MS);
 
         return () => clearInterval(interval);
     }, []);

@@ -1,6 +1,6 @@
 {
   "name": "airqt-app",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -24,7 +24,10 @@
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test:ui": "npx playwright test",
+    "test:ui:visual": "npx playwright test --config=playwright.config.visual.ts",
+    "test:ui:all": "npm run test:ui && npm run test:ui:visual && npx playwright merge-reports --reporter html ./all-blob-reports"
   },
   "proxy": "http://localhost:3334",
   "eslintConfig": {
