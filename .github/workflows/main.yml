@@ -20,6 +20,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: 'npm'
+          cache-dependency-path: ./client/package-lock.json
       - name: Run API tests
         run: |
           npm ci
@@ -27,17 +29,17 @@ jobs:
       - name: Cache UI test dependencies
         uses: actions/cache@v3
         with:
-         path: |
+          path: |
             client/node_modules
             ~/.cache/ms-playwright
-         key: client-deps-${{ hashFiles('client/package-lock.json') }}
-         restore-keys: |
-            client-deps-          
+          key: client-deps-${{ hashFiles('client/package-lock.json') }}
+          restore-keys: |
+            client-deps-         
       - name: Install dependencies for UI tests
         working-directory: ./client
         run: |
           npm ci
-          npx playwright install --with-deps
+          npx playwright install
       - name: Run Playwright UI tests
         run:  npm run test:ui
       - name: Deploy Playwright report to GitHub Pages
