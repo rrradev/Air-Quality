@@ -11,7 +11,9 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "mocha --timeout 10000 --exit",
     "heroku-postbuild": "NPM_CONFIG_PRODUCT=false npm install --prefix ./client && npm run build --prefix ./client",
-    "test:ui": "npm run test:ui:all --prefix ./client"
+    "test:ui": "npm run test:ui --prefix ./client",
+    "test:ui:visual": "npm run test:ui:visual --prefix ./client",
+    "test:ui:all": "npm run test:ui:all --prefix ./client"
   },
   "repository": {
     "type": "git",

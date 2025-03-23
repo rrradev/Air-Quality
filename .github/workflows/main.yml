@@ -42,7 +42,7 @@ jobs:
           npx playwright install-deps
           npx playwright install
       - name: Run Playwright UI tests
-        run:  npm run test:ui
+        run:  npm run test:ui:all
       - name: Deploy Playwright report to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3
