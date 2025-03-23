@@ -39,6 +39,7 @@ jobs:
         working-directory: ./client
         run: |
           npm ci
+          npx playwright install-deps
           npx playwright install
       - name: Run Playwright UI tests
         run:  npm run test:ui
