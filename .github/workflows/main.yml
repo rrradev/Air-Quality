@@ -24,6 +24,15 @@ jobs:
         run: |
           npm ci
           npm test
+      - name: Cache UI test dependencies
+        uses: actions/cache@v3
+        with:
+         path: |
+            client/node_modules
+            ~/.cache/ms-playwright
+         key: client-deps-${{ hashFiles('client/package-lock.json') }}
+         restore-keys: |
+            client-deps-          
       - name: Install dependencies for UI tests
         working-directory: ./client
         run: |
