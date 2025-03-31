@@ -7,6 +7,8 @@ import './LineChart.css';
 import { fetchCachedData } from '../../services/dataFetcher';
 import { DATA_FETCH_INTERVAL_MS } from '../../config/constants';
 
+const USER_SWITCH_RANGE_MSG = "User switched time range";
+
 function LineChart(props) {
 
     const [endpoint, setEndpoint] = useState("/api/data?hours=24");
@@ -55,7 +57,7 @@ function LineChart(props) {
                 setLabelTimeUnit("minute");
         }
         setIsLoaded(false);
-        abortController.abort("User switched time range");
+        abortController.abort(USER_SWITCH_RANGE_MSG);
         abortController = new AbortController();
 
         if (worker) {
@@ -85,7 +87,14 @@ function LineChart(props) {
                         }
                     }
                 },
-            );
+            )
+            .catch(err => {
+                if (err == USER_SWITCH_RANGE_MSG) {
+                    return;
+                } else {
+                    console.error(err);
+                }
+            });
     }
 
     useEffect(() => {
