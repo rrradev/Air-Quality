@@ -55,7 +55,7 @@ function LineChart(props) {
                 setLabelTimeUnit("minute");
         }
         setIsLoaded(false);
-        abortController.abort();
+        abortController.abort("User switched time range");
         abortController = new AbortController();
 
         if (worker) {
