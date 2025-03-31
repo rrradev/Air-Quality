@@ -89,7 +89,8 @@ function LineChart(props) {
                 },
             )
             .catch(err => {
-                if (err == USER_SWITCH_RANGE_MSG) {
+                const reason = err?.message || err;
+                if (reason == USER_SWITCH_RANGE_MSG) {
                     return;
                 } else {
                     console.error(err);
