@@ -4,6 +4,8 @@ const auth = require('../../middleware/auth');
 const { groupByHourPipeline } = require('../../lib/db/db_pipelines');
 const Data = require('../../models/Data');
 const validateData = require('../../middleware/validateData');
+const { tightLimit, globalLimit } = require('../../middleware/rateLimit');
+const { tightSlowDown, globalSlowDown } = require('../../middleware/slowDown');
 
 /**
  * @swagger
@@ -89,9 +91,8 @@ const validateData = require('../../middleware/validateData');
  *       401:
  *         description: Unauthorized
  */
-router.post('/', auth, validateData, (req, res) => {
+router.post('/', tightSlowDown, tightLimit, auth, validateData, (req, res) => {
     let { pm25, pm10, temp, hum } = req.body;
-
 
     const newData = new Data({
         pm25,
@@ -143,10 +144,7 @@ router.post('/', auth, validateData, (req, res) => {
  *            items:
  *             $ref: '#/components/schemas/Data' 
  */
-router.get('/', (req, res) => {
-    console.log('GET /api/data');
-    console.log(req.query);
-
+router.get('/', globalSlowDown, globalLimit, (req, res) => {
     if (Object.keys(req.query).length === 0) {
         const pastHour = new Date(
             new Date().getTime() - (60 * 60 * 1000)
@@ -208,7 +206,7 @@ router.get('/', (req, res) => {
  *       404:
  *         description: Not Found
  */
-router.delete('/:id', auth, (req, res) => {
+router.delete('/:id', tightSlowDown, tightLimit, auth, (req, res) => {
     Data.deleteOne({ _id: req.params.id })
         .then(result => {
             if (result.deletedCount === 1) {
