@@ -24,7 +24,7 @@ function LineChart(props) {
     var abortController = new AbortController();
     var worker;
 
-    const toggledButton = (buttonId) => {
+    const toggleButton = (buttonId) => {
         switch (buttonId) {
             case 1:
                 setEndpoint("/api/data?days=7&groupByHour=true");
@@ -56,20 +56,20 @@ function LineChart(props) {
                 setRange("day");
                 setLabelTimeUnit("minute");
         }
-        setIsLoaded(false);
+    }
+
+    const [chartData, updateChartData] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    const fetchData = async () => {
         abortController.abort(USER_SWITCH_RANGE_MSG);
         abortController = new AbortController();
 
         if (worker) {
             worker.terminate();
         }
-    }
 
-    const [chartData, updateChartData] = useState([]);
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    const fetchData = () => {
-        fetchCachedData(endpoint, abortController.signal)
+        const fetchPromise = fetchCachedData(endpoint, abortController.signal)
             .then(
                 (values) => {
                     if (window.Worker) {
@@ -79,7 +79,7 @@ function LineChart(props) {
                         worker.onmessage = (ev) => {
                             updateChartData(ev.data);
                             worker.terminate();
-                            setIsLoaded(true);
+                            setTimeout(() => setIsLoaded(true), 150);
                         }
 
                         worker.onerror = () => {
@@ -96,6 +96,19 @@ function LineChart(props) {
                     console.error(err);
                 }
             });
+
+        const raceResult = await Promise.race([
+            fetchPromise,
+            new Promise((resolve) =>
+                setTimeout(() => resolve({ type: 'timeout' }), 50)
+            )
+        ]);
+
+        if (raceResult.type == "timeout") {
+            setIsLoaded(false);
+        }
+
+        await fetchPromise;
     }
 
     useEffect(() => {
@@ -123,7 +136,7 @@ function LineChart(props) {
                 </Row>
                 <Row>
                     <Col className="buttons">
-                        <ChartButtons toggled={toggledButton} />
+                        <ChartButtons toggled={toggleButton} />
                     </Col>
                 </Row>
                 <Row>
