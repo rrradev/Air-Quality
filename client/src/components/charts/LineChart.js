@@ -24,7 +24,7 @@ function LineChart(props) {
     var abortController = new AbortController();
     var worker;
 
-    const toggledButton = (buttonId) => {
+    const toggleButton = (buttonId) => {
         switch (buttonId) {
             case 1:
                 setEndpoint("/api/data?days=7&groupByHour=true");
@@ -56,6 +56,12 @@ function LineChart(props) {
                 setRange("day");
                 setLabelTimeUnit("minute");
         }
+    }
+
+    const [chartData, updateChartData] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    const fetchData = () => {
         setIsLoaded(false);
         abortController.abort(USER_SWITCH_RANGE_MSG);
         abortController = new AbortController();
@@ -63,12 +69,7 @@ function LineChart(props) {
         if (worker) {
             worker.terminate();
         }
-    }
 
-    const [chartData, updateChartData] = useState([]);
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    const fetchData = () => {
         fetchCachedData(endpoint, abortController.signal)
             .then(
                 (values) => {
@@ -79,7 +80,7 @@ function LineChart(props) {
                         worker.onmessage = (ev) => {
                             updateChartData(ev.data);
                             worker.terminate();
-                            setIsLoaded(true);
+                            setTimeout(() => setIsLoaded(true), 250);
                         }
 
                         worker.onerror = () => {
@@ -123,7 +124,7 @@ function LineChart(props) {
                 </Row>
                 <Row>
                     <Col className="buttons">
-                        <ChartButtons toggled={toggledButton} />
+                        <ChartButtons toggled={toggleButton} />
                     </Col>
                 </Row>
                 <Row>
