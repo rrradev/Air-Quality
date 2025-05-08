@@ -5,14 +5,35 @@ test('has correct title', async ({ mainPage }) => {
   await expect(mainPage.navBarLink).toHaveText("Air Quality");
 });
 
-test('pm chart is displayed', async ({ mainPage }) => {
-  const requestPromise = mainPage.waitForRequest('**/api/data?hours=1');
-  const pmChart = mainPage.pmChart;
+const ranges = [
+  ['hour', '?hours=1'],
+  ['3 hours', '?hours=3'],
+  ['12 hours', '?hours=12'],
+  ['day', '?hours=24'],
+  ['week', '?days=7&groupByHour=true'],
+  ['month', '?days=30&groupByHour=true']
+];
 
-  await pmChart.oneHourButton.click();
-  await requestPromise;
+test.describe.parallel('Chart ranges tests', () => {
+  ranges.forEach(([buttonLabel, queries]) => {
+    test(`Display data for ${buttonLabel} range`, async ({ page }) => {
+      let callCount = 0;
+      page.on('request', (request) => {
+        if (request.url().includes(queries)) {
+          callCount++;
+        }
+      });
+      const mainPage = new MainPage(page);
+      await mainPage.goto('/');
 
-  await expect(pmChart.chartTitle).toHaveText("Particulate matter over the last hour");
+      if (buttonLabel !== 'day') {
+        await mainPage.pmChart.clickButton(buttonLabel);
+      }
+
+      await expect(mainPage.pmChart.chartTitle).toHaveText(`Particulate matter over the last ${buttonLabel}`);
+      expect(callCount).toBe(1);
+    });
+  });
 });
 
 test('error toast and loading indicator are displayed when it fails to fetch data', async ({ mainPage }) => {
@@ -47,22 +68,3 @@ test('404 page is displayed if invalid URL is entered', async ({ mainPage, _404P
   await expect(_404Page.notFoundImage).toBeVisible();
   await expect(_404Page.notFoundMessage).toContainText('The requested URL was not found.');
 });
-
-test('should call /api/data?hours=24 only once', async ({ page }) => {
-  const apiUrl = '/api/data?hours=24';
-  const mainPage = new MainPage(page);
-  let callCount = 0;
-
-  page.on('request', (request) => {
-    if (request.url().includes(apiUrl)) {
-      callCount++;
-    }
-  });
-
-  await page.goto('/');
-  await expect(mainPage.pmChart.loadingOverlay).not.toBeVisible();
-  await expect(mainPage.tempChart.loadingOverlay).not.toBeVisible();
-  await page.waitForTimeout(500);
-  expect(callCount).toBe(1);
-});
-
