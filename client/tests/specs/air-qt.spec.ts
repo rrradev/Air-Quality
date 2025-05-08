@@ -14,7 +14,7 @@ const ranges = [
   ['month', '?days=30&groupByHour=true']
 ];
 
-test.describe.parallel('Chart ranges tests', () => {
+test.describe.parallel('PM Chart ranges tests', () => {
   ranges.forEach(([buttonLabel, queries]) => {
     test(`Display data for ${buttonLabel} range`, async ({ page }) => {
       let callCount = 0;
@@ -67,4 +67,22 @@ test('404 page is displayed if invalid URL is entered', async ({ mainPage, _404P
 
   await expect(_404Page.notFoundImage).toBeVisible();
   await expect(_404Page.notFoundMessage).toContainText('The requested URL was not found.');
+});
+
+test('should call /api/data?hours=24 only once upon initial load', async ({ page }) => {
+  const apiUrl = '/api/data?hours=24';
+  const mainPage = new MainPage(page);
+  let callCount = 0;
+
+  page.on('request', (request) => {
+    if (request.url().includes(apiUrl)) {
+      callCount++;
+    }
+  });
+
+  await page.goto('/');
+  await expect(mainPage.pmChart.loadingOverlay).not.toBeVisible();
+  await expect(mainPage.tempChart.loadingOverlay).not.toBeVisible();
+  await page.waitForTimeout(500);
+  expect(callCount).toBe(1);
 });
