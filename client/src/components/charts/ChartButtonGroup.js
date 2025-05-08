@@ -1,59 +1,44 @@
 import React, { useState } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
+import { BUTTON_IDS } from './buttinIds';
 
-function ChartButtonGroup(props){
-    const [toggledButtonId, setToggledButtonId] = useState("2");
-    const weekButtonId = "1";
-    const dayButtonId = "2";
-    const $12hourButtonId = "3";
-    const $3hourButtonId = "4";
-    const hourButtonId = "5";
-    const monthButtonID = "6";
+function ChartButtonGroup(props) {
+    const [toggledButtonId, setToggledButtonId] = useState(BUTTON_IDS.DAY);
 
-    function handleClick(id){
-        if(id === toggledButtonId){
+    const rangeButtons = [
+        { id: BUTTON_IDS.MONTH, label: '1m' },
+        { id: BUTTON_IDS.WEEK, label: '1w' },
+        { id: BUTTON_IDS.DAY, label: '1d' },
+        { id: BUTTON_IDS.HOUR_12, label: '12h' },
+        { id: BUTTON_IDS.HOUR_3, label: '3h' },
+        { id: BUTTON_IDS.HOUR_1, label: '1h' }
+    ];
+
+
+    function handleClick(id) {
+        if (id === toggledButtonId) {
             return;
         }
 
         setToggledButtonId(id);
-        props.toggled(Number(id));
+        props.toggled(id);
     }
 
-    return(
+    return (
         <div>
             <ButtonGroup size="sm">
-                <Button id={monthButtonID}
-                    onClick={ev => handleClick(ev.target.id)}
-                    active={(toggledButtonId === monthButtonID)}>     
-                    1m
-                </Button> 
-                <Button id={weekButtonId}
-                    onClick={ev => handleClick(ev.target.id)}
-                    active={(toggledButtonId === weekButtonId)}>     
-                    1w
-                </Button> 
-                <Button id={dayButtonId}
-                    onClick={ev => handleClick(ev.target.id)}
-                    active={(toggledButtonId === dayButtonId)}>     
-                    1d
-                </Button>
-                <Button id={$12hourButtonId}
-                    active={toggledButtonId === $12hourButtonId}
-                    onClick={ev => handleClick(ev.target.id)}>
-                    12h
-                </Button>
-                <Button id={$3hourButtonId}
-                    active={toggledButtonId === $3hourButtonId}
-                    onClick={ev => handleClick(ev.target.id)}>
-                    3h
-                </Button>
-                <Button id={hourButtonId}
-                    active={toggledButtonId === hourButtonId}
-                    onClick={ev => handleClick(ev.target.id)}>
-                    1h
-                </Button>
-            </ButtonGroup>  
-        </div> 
+                {rangeButtons.map(({ id, label }) => (
+                    <Button
+                        key={id}
+                        id={id}
+                        onClick={(ev) => handleClick(ev.target.id)}
+                        active={toggledButtonId === id}
+                    >
+                        {label}
+                    </Button>
+                ))}
+            </ButtonGroup>
+        </div>
     );
 }
 
