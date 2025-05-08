@@ -6,6 +6,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import './LineChart.css';
 import { fetchCachedData } from '../../services/dataFetcher';
 import { DATA_FETCH_INTERVAL_MS } from '../../config/constants';
+import { BUTTON_IDS } from './buttinIds';
 
 const USER_SWITCH_RANGE_MSG = "User switched time range";
 
@@ -26,27 +27,27 @@ function LineChart(props) {
 
     const toggleButton = (buttonId) => {
         switch (buttonId) {
-            case 1:
+            case BUTTON_IDS.WEEK:
                 setEndpoint("/api/data?days=7&groupByHour=true");
                 setRange("week");
                 setLabelTimeUnit("day");
                 break;
-            case 3:
+            case BUTTON_IDS.HOUR_12:
                 setEndpoint("/api/data?hours=12");
                 setRange("12 hours");
                 setLabelTimeUnit("minute");
                 break;
-            case 4:
+            case BUTTON_IDS.HOUR_3:
                 setEndpoint("/api/data?hours=3");
                 setRange("3 hours");
                 setLabelTimeUnit("minute");
                 break;
-            case 5:
+            case BUTTON_IDS.HOUR_1:
                 setEndpoint("/api/data?hours=1");
                 setRange("hour");
                 setLabelTimeUnit("minute");
                 break;
-            case 6:
+            case BUTTON_IDS.MONTH:
                 setEndpoint("/api/data?days=30&groupByHour=true");
                 setRange("month");
                 setLabelTimeUnit("day");
@@ -61,8 +62,11 @@ function LineChart(props) {
     const [chartData, updateChartData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    const fetchData = () => {
-        setIsLoaded(false);
+    const fetchData = (reason = "auto") => {
+        if (reason !== "auto") {
+            setIsLoaded(false);
+        }
+
         abortController.abort(USER_SWITCH_RANGE_MSG);
         abortController = new AbortController();
 
@@ -100,7 +104,7 @@ function LineChart(props) {
     }
 
     useEffect(() => {
-        fetchData();
+        fetchData("range switch");
 
         const interval = setInterval(() => {
             fetchData();
