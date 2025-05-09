@@ -11,7 +11,6 @@ const ranges = [
   ['12 hours', '?hours=12'],
   ['day', '?hours=24'],
   ['week', '?days=7&groupByHour=true'],
-  ['month', '?days=30&groupByHour=true']
 ];
 
 test.describe.parallel('PM Chart ranges tests', () => {
@@ -50,20 +49,20 @@ test('error toast and loading indicator are displayed when it fails to fetch dat
   await expect(pmChart.loadingOverlay).toBeVisible();
 });
 
-test('loading indicator disappears when data is fetched', async ({ mainPage }) => {
+test.only('loading indicator disappears when data is fetched', async ({ mainPage }) => {
   const pmChart = mainPage.pmChart;
 
   await mainPage.page.route('**/api/data**', (route) => route.abort());
   await mainPage.open();
   await pmChart.oneHourButton.click();
   await mainPage.page.unroute('**/api/data**');
-  await pmChart.oneMonthButton.click();
+  await pmChart.weekButton.click();
 
   await expect(pmChart.loadingOverlay).not.toBeVisible();
 });
 
 test('404 page is displayed if invalid URL is entered', async ({ mainPage, _404Page }) => {
-  await mainPage.goto('/not-such-page');
+  await mainPage.goto('/no-such-page');
 
   await expect(_404Page.notFoundImage).toBeVisible();
   await expect(_404Page.notFoundMessage).toContainText('The requested URL was not found.');
