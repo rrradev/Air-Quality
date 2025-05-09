@@ -49,7 +49,7 @@ test('error toast and loading indicator are displayed when it fails to fetch dat
   await expect(pmChart.loadingOverlay).toBeVisible();
 });
 
-test.only('loading indicator disappears when data is fetched', async ({ mainPage }) => {
+test('loading indicator disappears when data is fetched', async ({ mainPage }) => {
   const pmChart = mainPage.pmChart;
 
   await mainPage.page.route('**/api/data**', (route) => route.abort());
