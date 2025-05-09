@@ -5,6 +5,7 @@ import NavBar from './NavBar';
 import './MainPanel.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ExtendedRangesProvider } from '../context/ExtendedRangesContext';
 
 const MainPanel = (props) => {
     const notify = (error) => toast.error(error.message, {
@@ -24,7 +25,9 @@ const MainPanel = (props) => {
             <ToastContainer />
             <NavBar isBulbOn={props.themeToggler} />
             <CardGroup notify={notify} dismissToast={dismissToast} />
-            <ChartGroup />
+            <ExtendedRangesProvider>
+                <ChartGroup />
+            </ExtendedRangesProvider>
         </div>
     );
 }

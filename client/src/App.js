@@ -4,6 +4,7 @@ import NotFound from './components/NotFound';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme, darkTheme, GlobalStyles } from './themes.js';
+import './App.css';
 
 const App = () => {
 

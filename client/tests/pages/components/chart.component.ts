@@ -7,7 +7,6 @@ export default class Chart {
     twelveHourButton: Locator;
     dayButton: Locator;
     weekButton: Locator;
-    oneMonthButton: Locator; 
     loadingOverlay: Locator;
 
     constructor($: Locator) {
@@ -17,7 +16,6 @@ export default class Chart {
         this.twelveHourButton = $.getByRole('button', { name: '12h' });
         this.dayButton = $.getByRole('button', { name: '1d' });
         this.weekButton = $.getByRole('button', { name: '1w' });
-        this.oneMonthButton = $.getByRole('button', { name: '1m' });
         this.loadingOverlay = $.getByTestId('overlay');
     }
 
@@ -28,15 +26,14 @@ export default class Chart {
             '3 hours': this.threeHourButton,
             hour: this.oneHourButton,
             day: this.dayButton,
-            month: this.oneMonthButton,
         };
-    
+
         const button = buttons[label];
-        
+
         if (!button) {
             throw new Error(`No such button: ${label}`);
         }
-    
+
         await button.click();
     }
 }
