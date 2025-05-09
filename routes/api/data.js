@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
-const { groupByHourPipeline } = require('../../lib/db/db_pipelines');
+const { groupByHourPipeline, groupByDayPipeline } = require('../../lib/db/db_pipelines');
 const Data = require('../../models/Data');
 const validateData = require('../../middleware/validateData');
 const { tightLimit, globalLimit } = require('../../middleware/rateLimit');
 const { tightSlowDown, globalSlowDown } = require('../../middleware/slowDown');
+const { MAX_QUERY_DAYS } = require('../../config/constants')
 
 /**
  * @swagger
@@ -134,6 +135,11 @@ router.post('/', tightSlowDown, tightLimit, auth, validateData, (req, res) => {
  *        schema:
  *         type: boolean
  *        description: The average of the sensor data grouped by hour
+ *      - in: query
+ *        name: groupByDay 
+ *        schema:
+ *         type: boolean
+ *        description: The average of the sensor data grouped by day
  *     responses:  
  *       200: 
  *         description: Success
@@ -160,7 +166,7 @@ router.get('/', globalSlowDown, globalLimit, (req, res) => {
         return;
     }
 
-    let { hours, days, groupByHour } = req.query;
+    let { hours, days, groupByHour, groupByDay } = req.query;
 
     hours = +hours || 1;
 
@@ -169,21 +175,30 @@ router.get('/', globalSlowDown, globalLimit, (req, res) => {
 
     days = +days || 1;
 
-    if (days > 30) days = 30;
-    if (days < 1) days = 1;
+    days = days > MAX_QUERY_DAYS ? MAX_QUERY_DAYS : days;
+    days = (days > 30 && (!groupByDay && !groupByHour)) ? 30 : days;
+    days = days < 1 ? 1 : days;
 
     const pastDate = new Date(
         new Date().getTime() - (days * hours * 60 * 60 * 1000)
     );
 
-    if (groupByHour === "true") {
-        const pipeline = groupByHourPipeline(pastDate);
-        Data.aggregate(pipeline)
-            .then(data => res.json(data));
-    } else {
-        Data.find({ "date": { "$gte": pastDate } })
-            .then(data => res.json(data));
+    let pipeline;
+
+    if (groupByDay) {
+        pipeline = groupByDayPipeline(pastDate);
+    } else if (groupByHour) {
+        pipeline = groupByHourPipeline(pastDate);
     }
+
+    const query = pipeline
+        ? Data.aggregate(pipeline)
+        : Data.find({ date: { $gte: pastDate } });
+
+    query.then(data => res.json(data))
+        .catch(() => {
+            res.status(500);
+        });
 });
 
 /** 
