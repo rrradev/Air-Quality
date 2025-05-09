@@ -6,7 +6,7 @@ const Data = require('../../models/Data');
 const validateData = require('../../middleware/validateData');
 const { tightLimit, globalLimit } = require('../../middleware/rateLimit');
 const { tightSlowDown, globalSlowDown } = require('../../middleware/slowDown');
-const { MAX_QUERY_DAYS } = require('../../config/constants')
+const { isEmpty, normalizeQuery } = require('../../lib/util/dataQueryUtils');
 
 /**
  * @swagger
@@ -104,7 +104,8 @@ router.post('/', tightSlowDown, tightLimit, auth, validateData, (req, res) => {
     });
 
     newData.save()
-        .then(data => res.status(201).json(data));
+        .then(data => res.status(201).json(data))
+        .catch(() => res.sendStatus(500));
 });
 
 /** 
@@ -151,7 +152,7 @@ router.post('/', tightSlowDown, tightLimit, auth, validateData, (req, res) => {
  *             $ref: '#/components/schemas/Data' 
  */
 router.get('/', globalSlowDown, globalLimit, (req, res) => {
-    if (Object.keys(req.query).length === 0) {
+    if (isEmpty(req.query)) {
         const pastHour = new Date(
             new Date().getTime() - (60 * 60 * 1000)
         );
@@ -166,18 +167,7 @@ router.get('/', globalSlowDown, globalLimit, (req, res) => {
         return;
     }
 
-    let { hours, days, groupByHour, groupByDay } = req.query;
-
-    hours = +hours || 1;
-
-    if (days >= 1 || hours > 24) hours = 24;
-    if (hours < 0) hours = 1;
-
-    days = +days || 1;
-
-    days = days > MAX_QUERY_DAYS ? MAX_QUERY_DAYS : days;
-    days = (days > 30 && (!groupByDay && !groupByHour)) ? 30 : days;
-    days = days < 1 ? 1 : days;
+    let { hours, days, groupByHour, groupByDay } = normalizeQuery(req.query);
 
     const pastDate = new Date(
         new Date().getTime() - (days * hours * 60 * 60 * 1000)
