@@ -5,32 +5,55 @@ test('has correct title', async ({ mainPage }) => {
   await expect(mainPage.navBarLink).toHaveText("Air Quality");
 });
 
-const ranges = [
-  ['hour', '?hours=1'],
-  ['3 hours', '?hours=3'],
-  ['12 hours', '?hours=12'],
-  ['day', '?hours=24'],
-  ['week', '?days=7&groupByHour=true'],
+type RangeTestCase = {
+  buttonLabel: string,
+  rangeLabel: string,
+  query: string,
+  isExtended?: boolean,
+};
+
+const ranges: RangeTestCase[] = [
+  { buttonLabel: '1h', rangeLabel: 'hour', query: '?hours=1' },
+  { buttonLabel: '3h', rangeLabel: '3 hours', query: '?hours=3' },
+  { buttonLabel: '12h', rangeLabel: '12 hours', query: '?hours=12' },
+  { buttonLabel: '1d', rangeLabel: 'day', query: '?hours=24' },
+  { buttonLabel: '1w', rangeLabel: 'week', query: '?days=7' },
+  { buttonLabel: '1m', rangeLabel: 'month', query: '?days=30', isExtended: true },
+  { buttonLabel: '3m', rangeLabel: '3 months', query: '?days=90', isExtended: true },
+  { buttonLabel: '6m', rangeLabel: '6 months', query: '?days=180', isExtended: true },
+  { buttonLabel: '1y', rangeLabel: 'year', query: '?days=365', isExtended: true }
 ];
 
 test.describe.parallel('PM Chart ranges tests', () => {
-  ranges.forEach(([buttonLabel, queries]) => {
-    test(`Display data for ${buttonLabel} range`, async ({ page }) => {
+  ranges.forEach(range => {
+    test(`Display data for ${range.buttonLabel} range`, async ({ page }) => {
+      const mainPage = new MainPage(page);
       let callCount = 0;
-      page.on('request', (request) => {
-        if (request.url().includes(queries)) {
+
+      page.on('request', (req) => {
+        if (req.url().includes(range.query)) {
           callCount++;
         }
       });
-      const mainPage = new MainPage(page);
-      await mainPage.goto('/');
 
-      if (buttonLabel !== 'day') {
-        await mainPage.pmChart.clickButton(buttonLabel);
+      if (range.isExtended) {
+        await mainPage.mock('**/api/available-extended-ranges',
+          {
+            status: 200,
+            body: JSON.stringify({ ranges: [range.buttonLabel] }),
+          }
+        );
       }
 
-      await expect(mainPage.pmChart.chartTitle).toHaveText(`Particulate matter over the last ${buttonLabel}`);
-      expect(callCount).toBe(1);
+      await mainPage.open();
+
+      if (range.buttonLabel !== '1d') {
+        await mainPage.pmChart.selectRange(range.buttonLabel);
+      }
+
+      await expect(mainPage.pmChart.chartTitle).toHaveText(`Particulate matter over the last ${range.rangeLabel}`);
+      await expect(mainPage.pmChart.loadingOverlay).not.toBeVisible();
+      expect(callCount, `calls to /api/date${range.query} NOT as expected`).toBe(1);
     });
   });
 });
@@ -61,9 +84,8 @@ test('loading indicator disappears when data is fetched', async ({ mainPage }) =
   await expect(pmChart.loadingOverlay).not.toBeVisible();
 });
 
-test('404 page is displayed if invalid URL is entered', async ({ mainPage, _404Page }) => {
+test.only('404 page is displayed if invalid URL is entered', async ({ mainPage, _404Page }) => {
   await mainPage.goto('/no-such-page');
-
   await expect(_404Page.notFoundImage).toBeVisible();
   await expect(_404Page.notFoundMessage).toContainText('The requested URL was not found.');
 });

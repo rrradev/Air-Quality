@@ -1,6 +1,6 @@
 const { expect } = require('chai');
-const { MAX_QUERY_DAYS } = require('../config/constants');
-const { normalizeQuery } = require('../lib/util/dataQueryUtils');
+const { MAX_QUERY_DAYS } = require('../../config/constants');
+const { normalizeQuery } = require('../../lib/util/dataQueryUtils');
 
 describe('normalizeQuery()', () => {
     const cases = [

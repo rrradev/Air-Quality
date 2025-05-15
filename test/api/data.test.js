@@ -1,30 +1,18 @@
-const server = require('../server');
-const chai = require('chai');
-const chaiHttp = require('chai-http');
 const { expect } = require('chai');
 const crypto = require('crypto');
-const { randomData } = require('./util/data-generator');
-const { expectToDeepEqualIgnoringFields, expectDatesToBeWithinSeconds } = require('./util/custom-assert');
+const { randomData } = require('../util/data-generator');
+const { expectToDeepEqualIgnoringFields, expectDatesToBeWithinSeconds } = require('../util/custom-assert');
+const { http, post, get, del } = require('./config/setup');
 
 const URI = '/api/data';
 
-chai.use(chaiHttp);
-
 describe('Test route ' + URI, () => {
-    before(function () {
-        if (process.env.NODE_ENV === 'production')
-            this.skip();
-    });
 
-    const TOKEN = require('../config/keys').authToken;
-    const AUTH = {
-        'x-auth-token': TOKEN,
-    };
     const RANDOM_TEST_DATA = randomData();
     const FIELDS_TO_IGNORE = ['__v', '_id', 'date'];
 
     it('should NOT allow submitting data without authorization', async () => {
-        const res = await chai.request(server)
+        const res = await http()
             .post(URI);
 
         expect(res).to.have.status(401);
@@ -34,7 +22,7 @@ describe('Test route ' + URI, () => {
     it('should NOT allow submitting data with wrong authorization', async () => {
         const randomString = crypto.randomBytes(20).toString('hex');
 
-        const res = await chai.request(server)
+        const res = await http()
             .post(URI)
             .set('x-auth-token', randomString);
 
@@ -43,9 +31,7 @@ describe('Test route ' + URI, () => {
     });
 
     it('should allow submitting data', async () => {
-        const res = await chai.request(server)
-            .post(URI)
-            .set(AUTH)
+        const res = await post(URI)
             .send(RANDOM_TEST_DATA);
 
         expect(res).to.have.status(201);
@@ -55,8 +41,7 @@ describe('Test route ' + URI, () => {
     });
 
     it('should return the last data entry', async () => {
-        const res = await chai.request(server)
-            .get(URI);
+        const res = await get(URI);
 
         expect(res).to.have.status(200);
         expect(res.body).to.be.an("object");
@@ -64,8 +49,7 @@ describe('Test route ' + URI, () => {
     });
 
     it('should return data for the past 24 hours', async () => {
-        const res = await chai.request(server)
-            .get(URI)
+        const res = await get(URI)
             .query({ hours: '24' });
         expect(res).to.have.status(200);
         expect(res.body).to.be.an("array");
@@ -73,8 +57,7 @@ describe('Test route ' + URI, () => {
     });
 
     it('should return data for the past 30 days grouped hourly', async () => {
-        const res = await chai.request(server)
-            .get(URI)
+        const res = await get(URI)
             .query({ days: '30', groupByHour: 'true' });
 
         expect(res).to.have.status(200);
@@ -85,9 +68,7 @@ describe('Test route ' + URI, () => {
     it('should NOT delete data with invalid id', async () => {
         const TEST_ID = '1';
 
-        const res = await chai.request(server)
-            .delete(URI.concat("/").concat(TEST_ID))
-            .set(AUTH)
+        const res = await del(URI.concat("/").concat(TEST_ID))
             .send();
 
         expect(res).to.have.status(404);
@@ -97,15 +78,11 @@ describe('Test route ' + URI, () => {
     it('should delete data with id', async () => {
         const TEST_DATA = randomData();
 
-        const id = await chai.request(server)
-            .post(URI)
-            .set(AUTH)
+        const id = await post(URI)
             .send(TEST_DATA)
             .then(res => res.body._id);
 
-        const res = await chai.request(server)
-            .delete(URI.concat("/").concat(id))
-            .set(AUTH)
+        const res = await del(URI.concat("/").concat(id))
             .send();
 
         expect(res).to.have.status(200);
@@ -115,7 +92,7 @@ describe('Test route ' + URI, () => {
     it('should NOT delete data without authorization', async () => {
         const TEST_ID = '1';
 
-        const res = await chai.request(server)
+        const res = await http()
             .delete(URI.concat("/").concat(TEST_ID))
             .send();
 
@@ -131,9 +108,7 @@ describe('Test route ' + URI, () => {
         };
         const { pm25, pm10, temp, hum } = TEST_DATA;
 
-        const res = await chai.request(server)
-            .post(URI)
-            .set(AUTH)
+        const res = await post(URI)
             .send(TEST_DATA);
 
         expect(res).to.have.status(201);
@@ -150,9 +125,7 @@ describe('Test route ' + URI, () => {
             temp: 3,
         };
 
-        const res = await chai.request(server)
-            .post(URI)
-            .set(AUTH)
+        const res = await post(URI)
             .send(TEST_DATA);
 
         expect(res).to.have.status(400);
@@ -168,9 +141,7 @@ describe('Test route ' + URI, () => {
             hum: "asd",
         };
 
-        const res = await chai.request(server)
-            .post(URI)
-            .set(AUTH)
+        const res = await post(URI)
             .send(TEST_DATA);
 
         expect(res).to.have.status(400);
@@ -193,9 +164,7 @@ describe('Test route ' + URI, () => {
             hum: 0
         }
 
-        const res = await chai.request(server)
-            .post(URI)
-            .set(AUTH)
+        const res = await post(URI)
             .send(TEST_DATA);
 
         expect(res).to.have.status(201);
@@ -204,9 +173,7 @@ describe('Test route ' + URI, () => {
 
     it('should NOT accept negative pm25', async () => {
         const TEST_DATA = { pm25: -5, pm10: 15, temp: 20, hum: 40 };
-        const res = await chai.request(server)
-            .post(URI)
-            .set(AUTH)
+        const res = await post(URI)
             .send(TEST_DATA);
 
         expect(res).to.have.status(400);
@@ -215,9 +182,7 @@ describe('Test route ' + URI, () => {
 
     it('should NOT accept negative pm10', async () => {
         const TEST_DATA = { pm25: 10, pm10: -15, temp: 20, hum: 40 };
-        const res = await chai.request(server)
-            .post(URI)
-            .set(AUTH)
+        const res = await post(URI)
             .send(TEST_DATA);
 
         expect(res).to.have.status(400);
@@ -226,9 +191,7 @@ describe('Test route ' + URI, () => {
 
     it('should NOT accept negative hum', async () => {
         const TEST_DATA = { pm25: 10, pm10: 15, temp: 20, hum: -40 };
-        const res = await chai.request(server)
-            .post(URI)
-            .set(AUTH)
+        const res = await post(URI)
             .send(TEST_DATA);
 
         expect(res).to.have.status(400);
