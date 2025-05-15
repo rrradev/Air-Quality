@@ -21,6 +21,38 @@ describe('normalizeQuery()', () => {
             expected: { hours: 24, days: 7, groupByHour: false, groupByDay: false }
         },
         {
+            input: { hour: 23, days: 7 },
+            expected: { hours: 24, days: 7, groupByHour: false, groupByDay: false }
+        },
+        {
+            input: { days: 30, groupByHour: false, groupByDay: true },
+            expected: { hours: 24, days: 30, groupByHour: false, groupByDay: true }
+        },
+        {
+            input: { days: 30, groupByHour: true, groupByDay: false },
+            expected: { hours: 24, days: 30, groupByHour: true, groupByDay: false }
+        },
+        {
+            input: { groupByHour: 'true', groupByDay: 'false' },
+            expected: { hours: 1, days: 1, groupByHour: true, groupByDay: false }
+        },
+        {
+            input: { days: 2, groupByHour: 'false', groupByDay: 'true' },
+            expected: { hours: 24, days: 2, groupByHour: false, groupByDay: true }
+        },
+        {
+            input: { hours: 24, groupByHour: 'false', groupByDay: 'true' },
+            expected: { hours: 24, days: 1, groupByHour: false, groupByDay: false }
+        },
+        {
+            input: { hours: 24, groupByHour: false, groupByDay: true },
+            expected: { hours: 24, days: 1, groupByHour: false, groupByDay: false }
+        },
+        {
+            input: { hours: 24, groupByHour: true, groupByDay: false },
+            expected: { hours: 24, days: 1, groupByHour: true, groupByDay: false }
+        },
+        {
             input: { days: 500 },
             expected: { hours: 24, days: 30, groupByHour: false, groupByDay: false }
         },
