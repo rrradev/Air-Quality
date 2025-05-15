@@ -84,7 +84,7 @@ test('loading indicator disappears when data is fetched', async ({ mainPage }) =
   await expect(pmChart.loadingOverlay).not.toBeVisible();
 });
 
-test.only('404 page is displayed if invalid URL is entered', async ({ mainPage, _404Page }) => {
+test('404 page is displayed if invalid URL is entered', async ({ mainPage, _404Page }) => {
   await mainPage.goto('/no-such-page');
   await expect(_404Page.notFoundImage).toBeVisible();
   await expect(_404Page.notFoundMessage).toContainText('The requested URL was not found.');
