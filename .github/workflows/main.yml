@@ -21,15 +21,7 @@ jobs:
           node-version: lts/*
           cache: 'npm'
           cache-dependency-path: ./package-lock.json
-
-      - name: Cache mongodb-memory-server binaries
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/mongodb-binaries
-          key: mongodb-binaries-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            mongodb-binaries-${{ runner.os }}-
-
+          
       - name: Run Unit & Integrations tests
         run: |
           npm ci
