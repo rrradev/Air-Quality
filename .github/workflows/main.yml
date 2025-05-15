@@ -1,7 +1,5 @@
 name: CI
 on:
- # schedule:
- #  - cron: '0 0 * * *'
   push:
     branches: [ master ]
   pull_request:
@@ -16,16 +14,24 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-      - name: Set up Node.js
+
+      - name: Set up Node.js for server
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: 'npm'
-          cache-dependency-path: ./client/package-lock.json
+          cache-dependency-path: ./package-lock.json
+          
+      - name: Run Unit & Integrations tests
+        run: |
+          npm ci
+          npm run test:unit && npm run test:integration
+
       - name: Run API tests
         run: |
           npm ci
-          npm test
+          npm run test:api
+
       - name: Cache UI test dependencies
         uses: actions/cache@v3
         with:
@@ -34,15 +40,25 @@ jobs:
             ~/.cache/ms-playwright
           key: client-deps-${{ hashFiles('client/package-lock.json') }}
           restore-keys: |
-            client-deps-         
+            client-deps-
+              
+      - name: Set up Node.js for client
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+          cache-dependency-path: ./client/package-lock.json
+
       - name: Install dependencies for UI tests
         working-directory: ./client
         run: |
           npm ci
           npx playwright install-deps
           npx playwright install
+
       - name: Run Playwright UI tests
-        run:  npm run test:ui:all
+        run: npm run test:ui:all
+
       - name: Deploy Playwright report to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3

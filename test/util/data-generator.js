@@ -1,6 +1,6 @@
 const randomData = () => {
 
-    return data = {
+    return {
         'pm25': randomFloat(0, 500),
         'pm10': randomFloat(0, 500),
         'temp': randomFloat(-20, 30),

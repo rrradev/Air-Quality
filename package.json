@@ -1,6 +1,6 @@
 {
   "name": "airqt-server",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "",
   "main": "server.js",
   "scripts": {
@@ -9,8 +9,10 @@
     "server": "nodemon server.js",
     "client": "npm start --prefix ./client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "mocha --timeout 10000 --exit",
     "heroku-postbuild": "NPM_CONFIG_PRODUCT=false npm install --prefix ./client && npm run build --prefix ./client",
+    "test:unit": "mocha test/unit/*.test.js",
+    "test:integration": "mocha --timeout 60000 test/integration/*.test.js --exit",
+    "test:api": "mocha --timeout 10000 --file test/api/config/setup.js test/api/*.test.js --exit",
     "test:ui": "npm run test:ui --prefix ./client",
     "test:ui:visual": "npm run test:ui:visual --prefix ./client",
     "test:ui:all": "npm run test:ui:all --prefix ./client"
@@ -41,9 +43,11 @@
     "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.19"
+    "mongodb-memory-server": "^10.1.4",
+    "nodemon": "^2.0.19",
+    "sinon": "^20.0.0"
   },
   "engines": {
-    "node": "16.17.0"
+    "node": ">=16.20.1"
   }
 }

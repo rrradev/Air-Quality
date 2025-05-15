@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
-const { groupByHourPipeline } = require('../../lib/db/db_pipelines');
+const { groupByHourPipeline, groupByDayPipeline } = require('../../lib/db/db_pipelines');
 const Data = require('../../models/Data');
 const validateData = require('../../middleware/validateData');
 const { tightLimit, globalLimit } = require('../../middleware/rateLimit');
 const { tightSlowDown, globalSlowDown } = require('../../middleware/slowDown');
+const { isEmpty, normalizeQuery } = require('../../lib/util/dataQueryUtils');
 
 /**
  * @swagger
@@ -103,7 +104,8 @@ router.post('/', tightSlowDown, tightLimit, auth, validateData, (req, res) => {
     });
 
     newData.save()
-        .then(data => res.status(201).json(data));
+        .then(data => res.status(201).json(data))
+        .catch(() => res.sendStatus(500));
 });
 
 /** 
@@ -134,6 +136,11 @@ router.post('/', tightSlowDown, tightLimit, auth, validateData, (req, res) => {
  *        schema:
  *         type: boolean
  *        description: The average of the sensor data grouped by hour
+ *      - in: query
+ *        name: groupByDay 
+ *        schema:
+ *         type: boolean
+ *        description: The average of the sensor data grouped by day
  *     responses:  
  *       200: 
  *         description: Success
@@ -145,7 +152,7 @@ router.post('/', tightSlowDown, tightLimit, auth, validateData, (req, res) => {
  *             $ref: '#/components/schemas/Data' 
  */
 router.get('/', globalSlowDown, globalLimit, (req, res) => {
-    if (Object.keys(req.query).length === 0) {
+    if (isEmpty(req.query)) {
         const pastHour = new Date(
             new Date().getTime() - (60 * 60 * 1000)
         );
@@ -160,30 +167,28 @@ router.get('/', globalSlowDown, globalLimit, (req, res) => {
         return;
     }
 
-    let { hours, days, groupByHour } = req.query;
-
-    hours = +hours || 1;
-
-    if (days >= 1 || hours > 24) hours = 24;
-    if (hours < 0) hours = 1;
-
-    days = +days || 1;
-
-    if (days > 30) days = 30;
-    if (days < 1) days = 1;
+    let { hours, days, groupByHour, groupByDay } = normalizeQuery(req.query);
 
     const pastDate = new Date(
         new Date().getTime() - (days * hours * 60 * 60 * 1000)
     );
 
-    if (groupByHour === "true") {
-        const pipeline = groupByHourPipeline(pastDate);
-        Data.aggregate(pipeline)
-            .then(data => res.json(data));
-    } else {
-        Data.find({ "date": { "$gte": pastDate } })
-            .then(data => res.json(data));
+    let pipeline;
+
+    if (groupByDay) {
+        pipeline = groupByDayPipeline(pastDate);
+    } else if (groupByHour) {
+        pipeline = groupByHourPipeline(pastDate);
     }
+
+    const query = pipeline
+        ? Data.aggregate(pipeline)
+        : Data.find({ date: { $gte: pastDate } });
+
+    query.then(data => res.json(data))
+        .catch(() => {
+            res.status(500);
+        });
 });
 
 /** 

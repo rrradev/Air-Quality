@@ -10,7 +10,7 @@
 [![PLAYWRIGHT](https://img.shields.io/badge/Playwright-orange?style=for-the-badge)](https://playwright.dev)
 
 # Air-Quality 
-[![CI](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml/badge.svg)](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml) [![Playwright Report](https://img.shields.io/badge/Playwright%20Report-%20-blue?)](https://rrradev.github.io/Air-Quality/)
+[![CI](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml/badge.svg)](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml) [![Playwright Report](https://custom-icon-badges.demolab.com/badge/Playwright-Report-2EAD33?logo=playwright)](https://rrradev.github.io/Air-Quality/)
 
 A web application that collects air quality data from a [sensor node](https://github.com/radradef/esp32SensorNode "radradef/esp32SensorNode") and visualizes it using charts (particulate matter, temperature and humidity).
 
@@ -29,8 +29,8 @@ API documentation: https://airqt.herokuapp.com/api-docs
 3. `npm run dev`
 
 ## Running tests
-#### [API](https://github.com/rrradev/Air-Quality/blob/master/test/api-data.js)
-1. `npm test`
+#### [API](https://github.com/rrradev/Air-Quality/blob/master/test/api/data.test.js)
+1. `npm test:api`
 
 #### [UI](https://github.com/rrradev/Air-Quality/blob/master/client/tests/specs/air-qt.spec.ts)
 1. `npm run test:ui`

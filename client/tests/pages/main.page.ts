@@ -20,6 +20,6 @@ export default class MainPage extends BasePage {
     }
 
     async open() {
-        await this.page.goto('/');
+        await this.goto('/');
     }
 }

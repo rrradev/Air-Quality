@@ -15,7 +15,7 @@ export const darkTheme = {
   chartBackgroundColor: "#1c252b",
   text: "rgb(200, 200, 200)",
   panelColor: "rgb(54, 54, 73)",
-  shadows: "0px 0px 0px 0px"
+  shadows: "0px 0px 0px 0px",
 };
 
 export const GlobalStyles = createGlobalStyle`
@@ -42,4 +42,19 @@ export const GlobalStyles = createGlobalStyle`
   #panel {
     background-color: ${(props) => props.theme.panelColor}
   }
+
+  .dropdown-menu {
+    background-color: ${(props) => props.theme.chartBackgroundColor}
+  }
+  
+  .dropdown-item {
+    color: ${(props) => props.theme.text}
+  }
+
+  .dropdown-item:hover,
+  .dropdown-item:focus {
+    background-color: ${(props) => props.theme.panelColor};
+    color: ${(props) => props.theme.text};
+  }
+
 `;

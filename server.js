@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const db = require('./config/keys').mongoURI;
 const data = require('./routes/api/data');
+const availableExtendedRanges = require('./routes/api/available-extended-ranges');
 const path = require('path');
 const fs = require('fs');
 const swaggerJsDoc = require('swagger-jsdoc');
@@ -47,6 +48,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use('/api/data', data);
+app.use('/api/available-extended-ranges', availableExtendedRanges);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 if (process.env.NODE_ENV === 'production') {

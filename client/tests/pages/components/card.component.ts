@@ -1,6 +1,5 @@
 import { Locator } from "@playwright/test";
 
-
 export default class Card {
     cardText: Locator;
 
