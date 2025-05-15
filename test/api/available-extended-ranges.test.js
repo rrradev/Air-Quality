@@ -23,7 +23,7 @@ describe('Test route ' + URI, () => {
         { id: '1y', days: 365 },
     ];
 
-    it('does NOT meet 80% distinct days with data criteria for All ranges', async function () {
+    it('does NOT meet 80% distinct days with data criteria for All ranges', async () => {
         ranges.forEach((range, idx) => {
             aggregateStub.onCall(idx).resolves([{ distinctDaysWithData: range.days * 0.79 }]);
         });
@@ -33,7 +33,7 @@ describe('Test route ' + URI, () => {
         expect(res.body.ranges).to.deep.equal([]);
     });
 
-    it('meets 80% distinct days with data criteria for All ranges ', async function () {
+    it('meets 80% distinct days with data criteria for All ranges ', async () => {
         ranges.forEach((range, idx) => {
             aggregateStub.onCall(idx).resolves([{ distinctDaysWithData: range.days * 0.8 }]);
         });
@@ -43,7 +43,7 @@ describe('Test route ' + URI, () => {
         expect(res.body.ranges).to.deep.equal(ranges.map(r => r.id));
     });
 
-    it('meets 80% distinct days with data criteria for 1m range ', async function () {
+    it('meets 80% distinct days with data criteria for 1m range ', async () => {
         aggregateStub.onCall(0).resolves([{ distinctDaysWithData: ranges[0].days * 0.8 }]);
 
         ranges.slice(1).forEach((range, idx) => {
@@ -55,7 +55,7 @@ describe('Test route ' + URI, () => {
         expect(res.body.ranges).to.deep.equal(["1m"]);
     });
 
-    it('meets 80% distinct days with data criteria for 1m & 3m ranges', async function () {
+    it('meets 80% distinct days with data criteria for 1m & 3m ranges', async () => {
         aggregateStub.onCall(0).resolves([{ distinctDaysWithData: ranges[0].days * 0.8 }]);
         aggregateStub.onCall(1).resolves([{ distinctDaysWithData: ranges[1].days * 0.8 }]);
 
@@ -68,7 +68,7 @@ describe('Test route ' + URI, () => {
         expect(res.body.ranges).to.deep.equal(["1m", "3m"]);
     });
 
-    it('fallbacks if aggregation pipeline is broken', async function () {
+    it('fallbacks if aggregation pipeline is broken', async () => {
         aggregateStub.resolves([]);
 
         const res = await get(URI);
