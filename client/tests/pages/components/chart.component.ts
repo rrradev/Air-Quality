@@ -1,4 +1,5 @@
 import { Locator } from "@playwright/test";
+import Dropdown from "./dropdown.component";
 
 export default class Chart {
     chartTitle: Locator;
@@ -7,8 +8,8 @@ export default class Chart {
     twelveHourButton: Locator;
     dayButton: Locator;
     weekButton: Locator;
-    oneMonthButton: Locator; 
     loadingOverlay: Locator;
+    extendedRangeDropdown: Dropdown;
 
     constructor($: Locator) {
         this.chartTitle = $.locator('.title-text');
@@ -17,27 +18,24 @@ export default class Chart {
         this.twelveHourButton = $.getByRole('button', { name: '12h' });
         this.dayButton = $.getByRole('button', { name: '1d' });
         this.weekButton = $.getByRole('button', { name: '1w' });
-        this.oneMonthButton = $.getByRole('button', { name: '1m' });
         this.loadingOverlay = $.getByTestId('overlay');
+        this.extendedRangeDropdown = new Dropdown($.locator('.dropdown'));
     }
 
-    async clickButton(label = 'hour') {
-        const buttons = {
-            week: this.weekButton,
-            '12 hours': this.twelveHourButton,
-            '3 hours': this.threeHourButton,
-            hour: this.oneHourButton,
-            day: this.dayButton,
-            month: this.oneMonthButton,
+    async selectRange(label = '1d') {
+        const defaultActions = {
+            '1w': () => this.weekButton.click(),
+            '12h': () => this.twelveHourButton.click(),
+            '3h': () => this.threeHourButton.click(),
+            '1h': () => this.oneHourButton.click(),
+            '1d': () => this.dayButton.click(),
         };
-    
-        const button = buttons[label];
-        
-        if (!button) {
-            throw new Error(`No such button: ${label}`);
-        }
-    
-        await button.click();
+
+        const action = defaultActions[label] || (
+            () => this.extendedRangeDropdown.selectItem(label)
+        );
+
+        await action();
     }
 }
 
