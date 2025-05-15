@@ -78,7 +78,7 @@ function LineChart(props) {
                 range.current = "6 months";
                 labelTimeUnit.current = "day";
                 tooltipFormat.current = 'MMM DD YYYY';
-                autoFetchRange.current = (false);
+                autoFetchRange.current = false;
                 setEndpoint("/api/data?days=180&groupByDay=true");
                 break;
             case BUTTON_IDS.YEAR_1:

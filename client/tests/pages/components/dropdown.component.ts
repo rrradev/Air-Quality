@@ -1,7 +1,6 @@
 import { Locator } from "@playwright/test";
 import BaseComponent from "./base.component";
 
-
 export default class Dropdown extends BaseComponent {
     toggle: Locator;
 
