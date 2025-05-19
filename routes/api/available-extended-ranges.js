@@ -5,6 +5,30 @@ const { globalLimit } = require('../../middleware/rateLimit');
 const { globalSlowDown } = require('../../middleware/slowDown');
 const { countDistinctDaysWithData } = require('../../lib/db/db_pipelines');
 
+/**
+ * @swagger
+ * /api/available-extended-ranges:
+ *   get:
+ *     tags:
+ *       - extended ranges controller
+ *     summary: Get available extended data ranges
+ *     description: Returns available time ranges (1m, 3m, 6m, 1y) based on whether enough sensor data exists in each range. A range is considered available if at least 80% of the days contain data.
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ranges:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["1m", "3m", "6m"]
+ *       500:
+ *         description: Server error
+ */
 router.get('/', globalSlowDown, globalLimit, async (req, res) => {
 
     try {
