@@ -15,14 +15,19 @@ const swaggerOptions = {
   swaggerDefinition: {
     info: {
       title: 'AirQt data API',
-      description: 'Managing the data measured by the air quality sensors',
+      description: `Managing the data measured by the air quality sensors.
+
+        All endpoints are subject to global or endpoint-specific rate limits.
+        If limits are exceeded, a 429 Too Many Requests response will be returned.
+        Rate limit headers are present.
+      `,
       contact: {
         email: 'rradev@duck.com'
       },
     },
     openapi: "3.0.0",
   },
-  apis: ['routes/api/*.js']
+  apis: ['routes/api/**/*.js']
 }
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
@@ -42,9 +47,9 @@ if (process.env.NODE_ENV === 'production') {
     if (req.header('x-forwarded-proto') !== 'https') {
       res.redirect(`https://${req.header('host')}${req.url}`)
     } else {
-      next();
-    }
-  });
+    next();
+  }
+});
 }
 
 app.use('/api/data', data);
