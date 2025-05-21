@@ -34,7 +34,7 @@ describe('normalizeQuery()', () => {
         },
         {
             input: { groupBy: 'hour' },
-            expected: { hours: 1, days: 1, groupBy: undefined }
+            expected: { hours: 1, days: 1, groupBy: 'hour' }
         },
         {
             input: { days: 2, groupBy: 'day' },
@@ -46,7 +46,7 @@ describe('normalizeQuery()', () => {
         },
         {
             input: { hours: 24, groupBy: 'hour' },
-            expected: { hours: 24, days: 1, groupBy: undefined }
+            expected: { hours: 24, days: 1, groupBy: 'hour' }
         },
         {
             input: { days: 31 },
