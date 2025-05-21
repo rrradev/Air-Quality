@@ -6,80 +6,93 @@ describe('normalizeQuery()', () => {
     const cases = [
         {
             input: { hours: 3 },
-            expected: { hours: 3, days: 1, groupByHour: false, groupByDay: false }
+            expected: { hours: 3, days: 1, groupBy: undefined }
         },
         {
             input: { hours: 25 },
-            expected: { hours: 24, days: 1, groupByHour: false, groupByDay: false }
+            expected: { hours: 24, days: 1, groupBy: undefined }
         },
         {
             input: { hours: -5 },
-            expected: { hours: 1, days: 1, groupByHour: false, groupByDay: false }
+            expected: { hours: 1, days: 1, groupBy: undefined }
         },
         {
             input: { days: 7 },
-            expected: { hours: 24, days: 7, groupByHour: false, groupByDay: false }
+            expected: { hours: 24, days: 7, groupBy: undefined }
         },
         {
             input: { hour: 23, days: 7 },
-            expected: { hours: 24, days: 7, groupByHour: false, groupByDay: false }
+            expected: { hours: 24, days: 7, groupBy: undefined }
         },
         {
-            input: { days: 30, groupByHour: false, groupByDay: true },
-            expected: { hours: 24, days: 30, groupByHour: false, groupByDay: true }
+            input: { days: 30, groupBy: 'day' },
+            expected: { hours: 24, days: 30, groupBy: 'day' }
         },
         {
-            input: { days: 30, groupByHour: true, groupByDay: false },
-            expected: { hours: 24, days: 30, groupByHour: true, groupByDay: false }
+            input: { days: 30, groupBy: 'hour' },
+            expected: { hours: 24, days: 30, groupBy: 'hour' }
         },
         {
-            input: { groupByHour: 'true', groupByDay: 'false' },
-            expected: { hours: 1, days: 1, groupByHour: true, groupByDay: false }
+            input: { groupBy: 'hour' },
+            expected: { hours: 1, days: 1, groupBy: undefined }
         },
         {
-            input: { days: 2, groupByHour: 'false', groupByDay: 'true' },
-            expected: { hours: 24, days: 2, groupByHour: false, groupByDay: true }
+            input: { days: 2, groupBy: 'day' },
+            expected: { hours: 24, days: 2, groupBy: 'day' }
         },
         {
-            input: { hours: 24, groupByHour: 'false', groupByDay: 'true' },
-            expected: { hours: 24, days: 1, groupByHour: false, groupByDay: false }
+            input: { hours: 24, groupBy: 'day' },
+            expected: { hours: 24, days: 1, groupBy: undefined }
         },
         {
-            input: { hours: 24, groupByHour: false, groupByDay: true },
-            expected: { hours: 24, days: 1, groupByHour: false, groupByDay: false }
-        },
-        {
-            input: { hours: 24, groupByHour: true, groupByDay: false },
-            expected: { hours: 24, days: 1, groupByHour: true, groupByDay: false }
-        },
-        {
-            input: { days: 500 },
-            expected: { hours: 24, days: 30, groupByHour: false, groupByDay: false }
-        },
-        {
-            input: { days: 500, groupByDay: true },
-            expected: { hours: 24, days: MAX_QUERY_DAYS, groupByHour: false, groupByDay: true }
-        },
-        {
-            input: { days: 500, groupByHour: true },
-            expected: { hours: 24, days: MAX_QUERY_DAYS, groupByHour: true, groupByDay: false }
+            input: { hours: 24, groupBy: 'hour' },
+            expected: { hours: 24, days: 1, groupBy: undefined }
         },
         {
             input: { days: 31 },
-            expected: { hours: 24, days: 30, groupByHour: false, groupByDay: false }
+            expected: { hours: 24, days: 30, groupBy: undefined }
         },
         {
-            input: { days: 31, groupByDay: true },
-            expected: { hours: 24, days: 31, groupByHour: false, groupByDay: true }
+            input: { days: 500, groupBy: 'day' },
+            expected: { hours: 24, days: MAX_QUERY_DAYS, groupBy: 'day' }
         },
         {
-            input: { days: 31, groupByHour: true },
-            expected: { hours: 24, days: 31, groupByHour: true, groupByDay: false }
+            input: { days: 500, groupBy: 'hour' },
+            expected: { hours: 24, days: MAX_QUERY_DAYS, groupBy: 'hour' }
         },
         {
-            input: {},
-            expected: { hours: 1, days: 1, groupByHour: false, groupByDay: false }
+            input: { days: 31, groupBy: 'day' },
+            expected: { hours: 24, days: 31, groupBy: 'day' }
+        },
+        {
+            input: { days: 31, groupBy: 'hour' },
+            expected: { hours: 24, days: 31, groupBy: 'hour' }
+        },
+        {
+            input: { days: 30, groupBy: 's' },
+            expected: { hours: 24, days: 30, groupBy: undefined }
+        },
+        {
+            input: { days: 0 },
+            expected: { hours: 1, days: 1, groupBy: undefined }
+        },
+        {
+            input: { hours: 0 },
+            expected: { hours: 1, days: 1, groupBy: undefined }
+        },
+        {
+            input: { days: -10 },
+            expected: { hours: 1, days: 1, groupBy: undefined }
+        },
+        {
+            input: { hours: '5', days: '3', groupBy: 'hour' },
+            expected: { hours: 24, days: 3, groupBy: 'hour' }
+        },
+        {
+            input: { hours: '', days: null },
+            expected: { hours: 1, days: 1, groupBy: undefined }
         }
+
     ];
 
     cases.forEach(({ input, expected }, idx) => {

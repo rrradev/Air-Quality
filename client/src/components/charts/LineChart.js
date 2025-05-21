@@ -58,35 +58,35 @@ function LineChart(props) {
                 labelTimeUnit.current = "day";
                 tooltipFormat.current = "HH:mm MMM DD";
                 autoFetchRange.current = false;
-                setEndpoint("/api/data?days=7&groupByHour=true");
+                setEndpoint("/api/data?days=7&groupBy=hour");
                 break;
             case BUTTON_IDS.MONTH:
                 range.current = "month";
                 labelTimeUnit.current = "day";
                 tooltipFormat.current = "HH:mm MMM DD";
                 autoFetchRange.current = false;
-                setEndpoint("/api/data?days=30&groupByHour=true");
+                setEndpoint("/api/data?days=30&groupBy=hour");
                 break;
             case BUTTON_IDS.MONTH_3:
                 range.current = "3 months";
                 labelTimeUnit.current = "day";
                 tooltipFormat.current = 'HH:mm MMM DD';
                 autoFetchRange.current = false;
-                setEndpoint("/api/data?days=90&groupByHour=true");
+                setEndpoint("/api/data?days=90&groupBy=hour");
                 break;
             case BUTTON_IDS.MONTH_6:
                 range.current = "6 months";
                 labelTimeUnit.current = "day";
                 tooltipFormat.current = 'MMM DD YYYY';
                 autoFetchRange.current = false;
-                setEndpoint("/api/data?days=180&groupByDay=true");
+                setEndpoint("/api/data?days=180&groupBy=day");
                 break;
             case BUTTON_IDS.YEAR_1:
                 range.current = "year";
                 labelTimeUnit.current = "day";
                 tooltipFormat.current = 'MMM DD YYYY';
                 autoFetchRange.current = false;
-                setEndpoint("/api/data?days=365&groupByDay=true");
+                setEndpoint("/api/data?days=365&groupBy=day");
                 break;
             default:
                 range.current = "day";
