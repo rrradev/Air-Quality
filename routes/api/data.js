@@ -132,15 +132,14 @@ router.post('/', tightSlowDown, tightLimit, auth, validateData, (req, res) => {
  *         maximum: 10
  *        description: The sensor data for the past number of days. Cancels hours.
  *      - in: query
- *        name: groupByHour 
+ *        name: groupBy 
  *        schema:
- *         type: boolean
- *        description: The average of the sensor data grouped by hour
- *      - in: query
- *        name: groupByDay 
- *        schema:
- *         type: boolean
- *        description: The average of the sensor data grouped by day
+ *         type: string
+ *         enum: [hour, day]
+ *        description: |
+ *           Optional. Groups the average of the sensor data:
+ *             - `hour`: Groups by each hour.
+ *             - `day`: Groups by each day. 
  *     responses:  
  *       200: 
  *         description: Success
@@ -167,17 +166,16 @@ router.get('/', globalSlowDown, globalLimit, (req, res) => {
         return;
     }
 
-    let { hours, days, groupByHour, groupByDay } = normalizeQuery(req.query);
+    let { hours, days, groupBy } = normalizeQuery(req.query);
 
     const pastDate = new Date(
         new Date().getTime() - (days * hours * 60 * 60 * 1000)
     );
 
     let pipeline;
-
-    if (groupByDay) {
+    if (groupBy === 'day') {
         pipeline = groupByDayPipeline(pastDate);
-    } else if (groupByHour) {
+    } else if (groupBy === 'hour') {
         pipeline = groupByHourPipeline(pastDate);
     }
 
@@ -186,9 +184,7 @@ router.get('/', globalSlowDown, globalLimit, (req, res) => {
         : Data.find({ date: { $gte: pastDate } });
 
     query.then(data => res.json(data))
-        .catch(() => {
-            res.status(500);
-        });
+        .catch(() => res.status(500));
 });
 
 /** 
