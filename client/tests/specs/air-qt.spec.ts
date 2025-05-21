@@ -18,10 +18,10 @@ const ranges: RangeTestCase[] = [
   { buttonLabel: '12h', rangeLabel: '12 hours', query: '?hours=12' },
   { buttonLabel: '1d', rangeLabel: 'day', query: '?hours=24' },
   { buttonLabel: '1w', rangeLabel: 'week', query: '?days=7' },
-  { buttonLabel: '1m', rangeLabel: 'month', query: '?days=30', isExtended: true },
-  { buttonLabel: '3m', rangeLabel: '3 months', query: '?days=90', isExtended: true },
-  { buttonLabel: '6m', rangeLabel: '6 months', query: '?days=180', isExtended: true },
-  { buttonLabel: '1y', rangeLabel: 'year', query: '?days=365', isExtended: true }
+  { buttonLabel: '1m', rangeLabel: 'month', query: '?days=30&groupBy=hour', isExtended: true },
+  { buttonLabel: '3m', rangeLabel: '3 months', query: '?days=90&groupBy=hour', isExtended: true },
+  { buttonLabel: '6m', rangeLabel: '6 months', query: '?days=180&groupBy=day', isExtended: true },
+  { buttonLabel: '1y', rangeLabel: 'year', query: '?days=365&groupBy=day', isExtended: true }
 ];
 
 test.describe.parallel('PM Chart ranges tests', () => {

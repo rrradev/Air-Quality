@@ -56,13 +56,29 @@ describe('Test route ' + URI, () => {
         expect(res.body).to.not.have.length(0);
     });
 
-    it('should return data for the past 30 days grouped hourly', async () => {
+    it('should return data for the past 10 days grouped hourly', async () => {
         const res = await get(URI)
-            .query({ days: '30', groupByHour: 'true' });
+            .query({ days: '10', groupBy: 'hour' });
 
         expect(res).to.have.status(200);
         expect(res.body).to.be.an("array");
         expect(res.body).to.not.have.length(0);
+        const lastEntryIndex = res.body.length - 1;
+        expectDatesToBeWithinSeconds(new Date(res.body[lastEntryIndex].date), new Date(), 60 * 60);
+    });
+
+    it('should return data for the past 10 days grouped daily', async () => {
+        const res = await get(URI)
+            .query({ days: '10', groupBy: 'day' });
+
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an("array");
+        expect(res.body).to.not.have.length(0);
+        const lastEntryIndex = res.body.length - 1;
+        expectDatesToBeWithinSeconds(new Date(res.body[lastEntryIndex].date), new Date(), 24 * 60 * 60);
+        expect(() =>
+            expectDatesToBeWithinSeconds(new Date(res.body[lastEntryIndex].date), new Date(), 60 * 60)
+        ).to.throw(/Actual .* is NOT within .* seconds from expected .*/);
     });
 
     it('should NOT delete data with invalid id', async () => {

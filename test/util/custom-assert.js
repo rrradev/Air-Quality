@@ -15,7 +15,7 @@ const expectToDeepEqualIgnoringFields = (actual, expected, fieldsToIgnore) => {
  */
 const expectDatesToBeWithinSeconds = (actual, expected, seconds) => {
     const differenceInSeconds = Math.abs(actual - expected) / 1000;
-    expect(differenceInSeconds).to.be.lessThan(seconds,
+    expect(differenceInSeconds).to.be.lessThanOrEqual(seconds,
         `Actual ${actual} is NOT within ${seconds} seconds from expected ${expected}`);
 }
 
