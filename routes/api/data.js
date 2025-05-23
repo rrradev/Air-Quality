@@ -156,14 +156,13 @@ router.get('/', globalSlowDown, globalLimit, (req, res) => {
             new Date().getTime() - (60 * 60 * 1000)
         );
 
-        Data.findOne({ "date": { "$gte": pastHour } })
+       return Data.findOne({ "date": { "$gte": pastHour } })
             .sort({ $natural: -1 })
             .then(data => {
                 data = data || [];
                 return res.json(data);
             })
             .catch(err => res.status(500).json({}));
-        return;
     }
 
     let { hours, days, groupBy } = normalizeQuery(req.query);
