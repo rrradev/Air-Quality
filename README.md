@@ -7,7 +7,7 @@
 [![CHART-JS](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://www.chartjs.org/docs/latest/)\
 [![MOCHA](https://img.shields.io/badge/mocha.js-323330?style=for-the-badge&logo=mocha&logoColor=Brown)](https://mochajs.org/)
 [![CHAI](https://img.shields.io/badge/chai.js-323330?style=for-the-badge&logo=chai&logoColor=red)](https://www.chaijs.com/plugins/chai-http/)
-[![PLAYWRIGHT](https://img.shields.io/badge/Playwright-orange?style=for-the-badge)](https://playwright.dev)
+[![Playwright](https://custom-icon-badges.demolab.com/badge/Playwright-323330?logo=playwright&logoColor=original&style=for-the-badge)](https://playwright.dev/)
 
 # Air-Quality 
 [![CI](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml/badge.svg)](https://github.com/rrradev/Air-Quality/actions/workflows/main.yml) [![Playwright Report](https://custom-icon-badges.demolab.com/badge/Playwright-Report-2EAD33?logo=playwright)](https://rrradev.github.io/Air-Quality/)
