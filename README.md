@@ -14,9 +14,12 @@
 
 A web application that collects air quality data from a [sensor node](https://github.com/radradef/esp32SensorNode "radradef/esp32SensorNode") and visualizes it using charts (particulate matter, temperature and humidity).
 
-Deployed on heroku: https://airqt.tail29d5f7.ts.net
+Deployed at: https://airqt.tail29d5f7.ts.net
 
 API documentation: https://airqt.tail29d5f7.ts.net/api-docs
+
+*Note: [Tailscale Funnel](https://tailscale.com/docs/features/tailscale-funnel) is currently in beta, so occasional SSL errors may occur. This application was previously hosted on Heroku, where it ran reliably for more than six years.*
+
 
 ![Screenshot 2024-12-01 211431](https://github.com/user-attachments/assets/9779f3ab-5461-465f-8652-496f991e9312)
 
